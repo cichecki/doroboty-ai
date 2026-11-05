@@ -632,6 +632,8 @@ export function PageDots({ gap = 10, radius = 170 }: { gap?: number; radius?: nu
     const draw = () => {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, c.width, c.height);
+      // A zero-size window (hidden tab or pane) would make drawImage throw.
+      if (!base.width || !base.height) return;
       ctx.drawImage(base, 0, 0);
       const k = s.on * (0.45 + 0.55 * s.energy);
       if (k < 0.01) return;

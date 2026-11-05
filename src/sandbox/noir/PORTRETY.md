@@ -1,6 +1,6 @@
 # Portrety postaci
 
-Pliki: `src/sandbox/noir/img/portraits/`, nazwa `{kategoria}-{nr}-{f|m}.png` (źródło: `Desktop/Claude/AI Product Heroes/Doroboty landing/assets/profilowe/`). Lista i przypisania są w `portraits.ts`; nowy plik o takiej nazwie pojawi się sam w galerii (sekcja „Portrety” w piaskownicy).
+Pliki: `src/sandbox/noir/img/portraits/`, nazwa `{kategoria}-{nr}-{f|m}.webp` (źródło: `Desktop/Claude/AI Product Heroes/Doroboty landing/assets/profilowe/`). Lista i przypisania są w `portraits.ts`; nowy plik o takiej nazwie pojawi się sam w galerii (sekcja „Portrety” w piaskownicy).
 
 ## Komplet (14)
 
@@ -21,9 +21,9 @@ Pliki: `src/sandbox/noir/img/portraits/`, nazwa `{kategoria}-{nr}-{f|m}.png` (ź
 
 ## Wymagania dla nowych portretów
 
-- PNG z prawdziwą przezroczystością (kanał alfa), bez ramki i cienia.
+- Źródło: PNG z prawdziwą przezroczystością (kanał alfa), bez ramki i cienia.
 - Popiersie, ujęcie 3/4, głowa w górnej 1/3; karta przycina obraz od góry.
 - Komiks noir, tusz i szarości, jeden czerwony detal `#D3202A`.
-- Min. 800 × 1000 px. Obecne pliki mają 0,4–1,8 MB: przed wdrożeniem do aplikacji trzeba je zmniejszyć (np. WebP, ~300 px szerokości dla kart).
+- Źródło min. 800 × 1000 px; w repo trzymamy WebP 320 px szerokości (ok. 30 KB).
 
 Prompt dla kandydatów (PL i EN) jest w sekcji „Portrety” piaskownicy i w `portraits-section.tsx`.

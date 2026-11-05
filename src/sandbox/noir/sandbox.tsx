@@ -14,7 +14,7 @@ import { Recruiting } from "./recruit";
 import { PortraitsSection } from "./portraits-section";
 import { CursorSection } from "./cursor-section";
 import { ComicCursor, Frame, PageDots, Portrait, ScoreTag, SpeechBubble } from "./comic";
-import advisorImg from "./img/doradca-cut.png";
+import advisorImg from "./img/doradca-cut.webp";
 
 /* ------------------------------------------------------------------
    Dane: kandydaci i ogłoszenia z prototypu.

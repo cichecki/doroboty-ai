@@ -1,5 +1,5 @@
-/* Portrety postaci: PNG z przezroczystym tłem w img/portraits/, nazwa: {kategoria}-{nr}-{f|m}.png */
-const files = import.meta.glob("./img/portraits/*.png", {
+/* Portrety postaci: PNG z przezroczystym tłem w img/portraits/, nazwa: {kategoria}-{nr}-{f|m}.webp */
+const files = import.meta.glob("./img/portraits/*.webp", {
   eager: true,
   import: "default",
 }) as Record<string, string>;
@@ -14,7 +14,7 @@ export type PortraitInfo = {
 
 export const portraits: PortraitInfo[] = Object.entries(files)
   .map(([path, src]) => {
-    const m = path.match(/\/(build|apply|lead)-(\d+)-(f|m)\.png$/);
+    const m = path.match(/\/(build|apply|lead)-(\d+)-(f|m)\.webp$/);
     if (!m) return null;
     return {
       id: `${m[1]}-${m[2]}-${m[3]}`,
