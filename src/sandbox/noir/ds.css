@@ -1,0 +1,308 @@
+/* =====================================================================
+   SZKIELET DESIGN SYSTEMU: boczny panel + sekcje
+   ===================================================================== */
+:root {
+  /* skale kolorów (pełna lista w sekcji Kolory) */
+  --grey-950: #0a0a0a;
+  --grey-900: #151515;
+  --grey-850: #1f1f1f;
+  --grey-800: #262523;
+  --grey-750: #2a2926;
+  --grey-700: #3a3835;
+  --grey-600: #4a4844;
+  --grey-500: #5c5952;
+  --grey-450: #77736b;
+  --grey-400: #8a867e;
+  --grey-300: #a8a49b;
+  --grey-250: #b9b5ac;
+  --grey-200: #d8d4cb;
+  --grey-150: #e6e2d9;
+  --grey-100: #f2efe8;
+  --red-950: #3a0709;
+  --red-900: #5c0c10;
+  --red-800: #7f1016;
+  --red-700: #a3141c;
+  --red-600: #d3202a;
+  --red-500: #e2434b;
+  --red-400: #ec6e74;
+  --red-300: #f39ca0;
+  --red-200: #f8c8ca;
+  --red-100: #fbe6e6;
+  --dsnav-w: 264px;
+  --dsnav-rail: 64px;
+}
+.ds .sb-main {
+  margin: 0 0 0 var(--dsnav-rail);
+  max-width: none;
+  padding: 0 clamp(20px, 4vw, 64px) 120px;
+  transition: margin-left 320ms var(--ease-snap);
+}
+.ds--open .sb-main {
+  margin-left: var(--dsnav-w);
+}
+.ds .sb-main > * {
+  max-width: 1180px;
+}
+
+.dsnav {
+  position: fixed;
+  z-index: var(--z-sticky);
+  inset: 0 auto 0 0;
+  width: var(--dsnav-rail);
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-right: 4px solid var(--white);
+  transition: width 320ms var(--ease-snap);
+  overflow: hidden;
+}
+.dsnav.is-open {
+  width: var(--dsnav-w);
+}
+.dsnav__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 72px;
+  padding: 10px 10px 10px 20px;
+  border-bottom: 3px solid var(--white);
+}
+.dsnav__logo {
+  display: block;
+  font: 400 22px/1 var(--f-action);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.dsnav__logo b {
+  color: var(--red);
+  font-weight: 400;
+}
+.dsnav__logo small {
+  display: block;
+  font: 700 11px/1.4 var(--f-ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dsnav:not(.is-open) .dsnav__logo {
+  display: none;
+}
+.dsnav:not(.is-open) .dsnav__top {
+  justify-content: center;
+  padding: 10px;
+}
+.dsnav__list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 0 24px;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+}
+.dsnav__group {
+  display: grid;
+  gap: 2px;
+}
+.dsnav__caption {
+  padding: 0 22px 6px;
+  font: 700 11.5px/1 var(--f-ui);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dsnav .npanel__item {
+  padding: 9px 14px 8px;
+  font-size: 14.5px;
+  white-space: nowrap;
+}
+.dsnav__reduce {
+  margin: 8px 22px 0;
+}
+
+/* sekcje: gruba biała kreska nad każdą */
+.ds .sb-section {
+  border-bottom: 0;
+  border-top: 4px solid var(--white);
+  padding-top: 56px;
+}
+.ds-hero {
+  padding: 48px 0 40px;
+}
+.ds-hero .sb-h1 {
+  margin-bottom: 0;
+}
+.fd-sub-block {
+  margin-top: 40px;
+}
+.fd-rules {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+.fd-rules li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14.5px;
+  color: #e6e2d9;
+}
+.fd-rules li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+  rotate: 45deg;
+}
+
+/* kolory */
+.cgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 22px;
+}
+.cgrid--main {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.csw-big {
+  display: grid;
+  gap: 4px;
+  font-size: 13.5px;
+}
+.csw-big__chip {
+  display: grid;
+  place-items: end start;
+  height: 96px;
+  padding: 10px 12px;
+  font: 400 26px/1 var(--f-display);
+  border: 3px solid var(--white);
+  margin-bottom: 8px;
+}
+.cgrid--main .csw-big__chip {
+  height: 140px;
+  font-size: 40px;
+}
+.csw__role {
+  color: var(--muted);
+}
+.cscale {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+  gap: 0;
+  border: 3px solid var(--white);
+}
+.cscale__item {
+  display: grid;
+}
+.cscale__chip {
+  display: grid;
+  place-items: end start;
+  height: 72px;
+  padding: 6px 8px;
+  font: 700 12px/1 var(--f-ui);
+}
+.cscale__item .sb-mono {
+  padding: 6px 8px 8px;
+  font-size: 11.5px;
+  background: var(--ink);
+}
+
+@media (max-width: 980px) {
+  .ds .sb-main,
+  .ds--open .sb-main {
+    margin-left: 0;
+    padding-top: 72px;
+  }
+  .dsnav {
+    inset: 0 auto auto 0;
+    width: 100%;
+    height: 72px;
+    border-right: 0;
+    border-bottom: 4px solid var(--white);
+  }
+  .dsnav.is-open {
+    width: 100%;
+    height: 100dvh;
+  }
+  .dsnav:not(.is-open) .dsnav__logo {
+    display: block;
+  }
+  .dsnav:not(.is-open) .dsnav__top {
+    justify-content: space-between;
+    padding: 10px 10px 10px 20px;
+  }
+  .dsnav__top {
+    border-bottom: 0;
+  }
+  .cgrid--main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* linki panelu: jak w górnym pasku – maźnięcie do połowy na hover, pełne czerwone przy aktywnym */
+.dsnav__link {
+  position: relative;
+  justify-self: start;
+  margin: 0 22px;
+  padding: 7px 0 8px;
+  color: #e6e2d9;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14.5px;
+  white-space: nowrap;
+}
+.dsnav__link::after {
+  content: "";
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  bottom: 2px;
+  height: 6px;
+  background: var(--white);
+  clip-path: polygon(0 40%, 100% 0, 98% 100%, 2% 80%);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform var(--t-hover) var(--ease-out);
+}
+.dsnav__link:hover::after,
+.dsnav__link:focus-visible::after {
+  transform: scaleX(0.6);
+}
+.dsnav__link.is-active {
+  color: var(--white);
+}
+.dsnav__link.is-active::after {
+  transform: scaleX(1);
+  background: var(--red);
+}
+.dsnav__group {
+  justify-items: start;
+}
+
+/* desktop: panel zawsze otwarty, bez przycisku chowania */
+@media (min-width: 981px) {
+  .dsnav,
+  .dsnav:not(.is-open) {
+    width: var(--dsnav-w);
+  }
+  .dsnav__toggle {
+    display: none;
+  }
+  .dsnav:not(.is-open) .dsnav__logo {
+    display: block;
+  }
+  .dsnav:not(.is-open) .dsnav__top {
+    justify-content: space-between;
+    padding: 10px 10px 10px 20px;
+  }
+}
+/* telefon/tablet: lista widoczna tylko po otwarciu */
+@media (max-width: 980px) {
+  .dsnav:not(.is-open) .dsnav__list {
+    display: none;
+  }
+}

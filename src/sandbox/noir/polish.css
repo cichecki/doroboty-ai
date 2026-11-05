@@ -1,0 +1,389 @@
+/* =====================================================================
+   SZLIF (v0.13): karta kandydata, kafelki decyzji, doradca, przełącznik
+   ===================================================================== */
+.nowrap {
+  white-space: nowrap;
+}
+
+/* Match Score większy o 40% i mocniej na karcie */
+.score-tag--lg {
+  padding: 11px 20px 9px;
+  filter: drop-shadow(4px 4px 0 var(--ink));
+}
+.score-tag--lg .score-tag__num {
+  font-size: 53px;
+  -webkit-text-stroke: 5px var(--ink);
+}
+.score-tag--lg .score-tag__label {
+  font-size: 19px;
+}
+.ccard .score-tag {
+  top: -40px;
+  right: 26px;
+  rotate: 4deg;
+}
+
+/* karta kandydata: nazwisko na całą szerokość, wyrównane do dołu portretu, pod Match Score */
+.ccard .kf__content {
+  padding: 34px clamp(32px, 4vw, 48px) 30px;
+}
+.ccard__head {
+  padding-right: 0;
+  align-items: flex-end;
+}
+.ccard__id {
+  min-width: 0;
+}
+.ccard__name {
+  overflow-wrap: anywhere;
+}
+.ccard__stage {
+  align-items: flex-start;
+}
+.ccard__stage .stage-dot {
+  margin-top: 0.45em;
+}
+
+/* akcje w jednej linii */
+.ccard__actions {
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ccard__decide {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* kafelki decyzji */
+.dtile-wrap {
+  position: relative;
+  display: inline-grid;
+}
+.dtile {
+  position: relative;
+  width: 52px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: transform var(--t-release) var(--ease-out);
+}
+.dtile__body {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  clip-path: polygon(6% 0, 100% 6%, 94% 100%, 0 92%);
+  transition: background-color 160ms;
+}
+.dtile--yes .dtile__body {
+  background: var(--white);
+  color: var(--ink);
+}
+.dtile--no .dtile__body {
+  background: var(--white);
+  color: var(--white);
+}
+.dtile--no .dtile__body::before {
+  content: "";
+  position: absolute;
+  inset: 2.5px;
+  background: var(--surface, var(--panel));
+  clip-path: inherit;
+  z-index: 0;
+  transition: opacity 160ms;
+}
+.dtile .cdecide {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  overflow: visible;
+  transition: transform var(--t-hover) var(--ease-spring);
+}
+.cdecide path {
+  fill: currentColor;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+.dtile:hover,
+.dtile:focus-visible {
+  transform: rotate(-6deg) scale(1.08);
+  transition: transform var(--t-hover) var(--ease-spring);
+}
+.dtile:hover .cdecide,
+.dtile:focus-visible .cdecide {
+  transform: scale(1.18) rotate(-4deg);
+}
+.dtile--yes:hover .dtile__body,
+.dtile--yes:focus-visible .dtile__body {
+  background: var(--red);
+  color: var(--white);
+}
+.dtile--no:hover .dtile__body::before,
+.dtile--no:focus-visible .dtile__body::before {
+  opacity: 0;
+}
+.dtile--no:hover .dtile__body,
+.dtile--no:focus-visible .dtile__body {
+  color: var(--ink);
+}
+.dtile:active {
+  transform: translate(3px, 3px) scale(0.96);
+  transition-duration: var(--t-press);
+}
+.dtile:focus-visible {
+  outline: 3px dashed var(--white);
+  outline-offset: 5px;
+}
+
+/* dymek podpowiedzi nad kafelkiem */
+.dtile__tip {
+  position: absolute;
+  z-index: 10;
+  bottom: calc(100% + 12px);
+  right: -6px;
+  width: max-content;
+  max-width: 220px;
+  padding: 7px 12px 6px;
+  background: var(--white);
+  color: var(--ink);
+  font: 700 13px/1.25 var(--f-ui);
+  clip-path: polygon(0 0, 100% 4%, 98% 100%, 2% 94%);
+  opacity: 0;
+  translate: 0 6px;
+  pointer-events: none;
+  transition:
+    opacity 140ms,
+    translate 200ms var(--ease-spring);
+}
+.dtile__tip::after {
+  content: "";
+}
+.dtile-wrap:hover .dtile__tip,
+.dtile:focus-visible + .dtile__tip {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* doradca obok kafla, kafle niskie */
+.adv-row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 560px);
+  gap: 8px 26px;
+  align-items: end;
+}
+.adv-row--right {
+  grid-template-columns: minmax(0, 560px) 220px;
+}
+.adv-row__figure {
+  width: 120px;
+  height: auto;
+}
+.adv-row__side {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  align-content: end;
+  min-height: 160px;
+}
+.adv-row__side .adv-row__figure {
+  opacity: 0.4;
+  translate: 0 10px;
+  transition:
+    opacity var(--t-hover),
+    translate var(--t-hover) var(--ease-spring);
+}
+.adv-row__side .adv-row__figure.is-up {
+  opacity: 1;
+  translate: 0 0;
+}
+.adv-row__bubble {
+  position: absolute;
+  bottom: 150px;
+  left: 60px;
+  width: 210px;
+}
+.adv-tile .kf__content {
+  padding: 34px clamp(32px, 4vw, 44px) 26px;
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.adv-tile--form .kf__content {
+  gap: 18px;
+  justify-items: stretch;
+}
+.adv-tile__title {
+  margin: 0;
+  font: 400 24px/1.05 var(--f-display);
+  text-transform: uppercase;
+}
+.adv-tile__text {
+  margin: 0 0 6px;
+  color: #d8d4cb;
+}
+
+/* przełącznik: zaznaczenie wypełnia segment do ramy, bez prześwitów */
+.nseg__thumb {
+  clip-path: none;
+  top: -1px;
+  bottom: -1px;
+}
+.nseg__opt:first-of-type.is-on ~ .nseg__thumb,
+.nseg__thumb {
+  left: 0;
+}
+
+@media (max-width: 760px) {
+  .ccard__actions {
+    flex-wrap: wrap;
+  }
+  .adv-row,
+  .adv-row--right {
+    grid-template-columns: 1fr;
+  }
+  .adv-row__figure {
+    width: 96px;
+  }
+  .adv-row--right .adv-row__side {
+    order: -1;
+    min-height: 120px;
+  }
+  .adv-row__bubble {
+    left: 104px;
+    bottom: 30px;
+    width: auto;
+    max-width: 200px;
+  }
+}
+
+/* karty kandydatów: min. 520 px, żeby nazwisko i data mieściły się w jednej linii */
+.cgrid-cand {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(520px, 100%), 1fr));
+  gap: 56px 28px;
+  margin-top: 44px;
+  align-items: start;
+}
+
+/* wąskie ekrany: nic nie wystaje poza stronę */
+.fd-type__row > * {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.fd-space__row {
+  grid-template-columns: 70px minmax(0, 1fr) 56px;
+}
+.fd-space__bar {
+  max-width: 100%;
+}
+@media (max-width: 760px) {
+  .role-table {
+    display: block;
+    overflow-x: auto;
+  }
+  .fd-t-dxl {
+    font-size: clamp(1.9rem, 10vw, 2.6rem);
+  }
+}
+
+/* wybór persony na bardzo wąskim ekranie */
+@media (max-width: 760px) {
+  .npersona {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .npersona__head {
+    flex-wrap: wrap;
+  }
+  .npersona__name {
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 420px) {
+  .nbtn__label {
+    white-space: normal;
+    text-align: center;
+  }
+  .npersona__card .kf__content {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
+
+/* sekcja Kursor */
+.cur-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+.cur-prev {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 24px 18px 18px;
+  background: var(--panel);
+  border: 3px solid var(--white);
+}
+.cur-prev img {
+  width: 96px;
+  height: 96px;
+  image-rendering: auto;
+  background: repeating-linear-gradient(45deg, #1c1b19 0 8px, #222120 8px 16px);
+  padding: 8px;
+  box-sizing: content-box;
+}
+.cur-prev figcaption {
+  display: grid;
+  gap: 4px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.cur-prev b {
+  color: var(--white);
+  font: 400 20px/1 var(--f-action);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.cur-try {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 28px;
+  min-height: 160px;
+  border: 2.5px dashed var(--line);
+  color: var(--muted);
+  font: 400 22px/1 var(--f-action);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* raster w portrecie skaluje się z rozmiarem portretu */
+.portrait__in::before {
+  background-image: radial-gradient(
+    circle,
+    var(--red) calc(var(--dot, 9px) * 0.25),
+    transparent calc(var(--dot, 9px) * 0.29)
+  );
+  background-size: var(--dot, 9px) var(--dot, 9px);
+}
+
+/* odsłonięcie wyniku: przycisk do profilu, ciemny na białym kadrze */
+.moment__cta {
+  margin-top: 16px;
+}
+.moment__cta .nbtn--primary {
+  --bg: var(--ink);
+  --fg: var(--white);
+}
+.moment.is-open .moment__cta {
+  animation: m-bubble 420ms 2300ms var(--ease-out) both;
+}

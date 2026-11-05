@@ -1,0 +1,138 @@
+/* =====================================================================
+   PORTRETY (noir, propozycja)
+   ===================================================================== */
+.pgal {
+  display: grid;
+  gap: 30px;
+}
+.pgal__group {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+.pgal__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+.pgal__item {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+.pgal__item figcaption {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.psizes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 28px 36px;
+}
+.psizes__item {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  max-width: 180px;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+.psizes__item b {
+  color: var(--white);
+}
+
+.pshort {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+.pshort__card .kf__content {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 34px 40px 28px;
+  text-align: center;
+}
+.pshort__card .score-tag {
+  position: absolute;
+  top: -18px;
+  right: 18px;
+  z-index: 3;
+  rotate: 4deg;
+  filter: drop-shadow(2px 2px 0 var(--ink));
+}
+.pshort__name {
+  font: 400 20px/1.05 var(--f-display);
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+.pshort__role {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.psteps {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: ps;
+  display: grid;
+  gap: 10px;
+  max-width: 72ch;
+}
+.psteps li {
+  counter-increment: ps;
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+  align-items: start;
+  color: #d8d4cb;
+}
+.psteps li::before {
+  content: counter(ps);
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: var(--white);
+  color: var(--ink);
+  font: 400 18px/1 var(--f-action);
+  clip-path: polygon(8% 0, 100% 6%, 92% 100%, 0 92%);
+}
+
+.prompt .kf__content {
+  display: grid;
+  gap: 16px;
+  padding: 34px clamp(40px, 4vw, 52px) 32px;
+}
+.prompt__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.prompt__text {
+  margin: 0;
+  padding: 16px 18px;
+  background: var(--ink);
+  border-left: 5px solid var(--white);
+  white-space: pre-wrap;
+  font: 400 14px/1.6 var(--f-ui);
+  color: #e6e2d9;
+  max-height: 420px;
+  overflow: auto;
+}
+
+@media (max-width: 980px) {
+  .pshort {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 560px) {
+  .pshort {
+    grid-template-columns: 1fr;
+  }
+}
