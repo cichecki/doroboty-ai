@@ -395,3 +395,45 @@
 .ctrl-card {
   margin-top: 6px;
 }
+
+/* tło pierwszego ekranu: przyklejone miasto, wygaszane skryptem przy przewijaniu */
+.hero-bg {
+  position: fixed;
+  z-index: 0;
+  inset: 0 0 0 var(--dsnav-w);
+  background-size: cover;
+  background-position: center 35%;
+  pointer-events: none;
+  will-change: opacity;
+}
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(10 10 10 / 0.35) 0%,
+    rgb(10 10 10 / 0.05) 35%,
+    rgb(10 10 10 / 0.55) 75%,
+    var(--ink) 100%
+  );
+}
+.ds-hero {
+  min-height: calc(100svh - 40px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 64px;
+}
+.ds-hero .sb-h1 {
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  text-shadow: 6px 6px 0 var(--ink);
+}
+@media (max-width: 980px) {
+  .hero-bg {
+    left: 0;
+  }
+  .ds-hero {
+    min-height: calc(100svh - 72px);
+  }
+}

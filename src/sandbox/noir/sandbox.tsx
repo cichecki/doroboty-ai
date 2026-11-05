@@ -15,6 +15,7 @@ import { PortraitsSection } from "./portraits-section";
 import { CursorSection } from "./cursor-section";
 import { ComicCursor, Frame, PageDots, Portrait, ScoreTag, SpeechBubble } from "./comic";
 import advisorImg from "./img/doradca-cut.webp";
+import cityImg from "./img/city.webp";
 
 /* ------------------------------------------------------------------
    Dane: kandydaci i ogłoszenia z prototypu.
@@ -772,6 +773,41 @@ function DsNav({
   );
 }
 
+/* Tło pierwszego ekranu: miasto z landingu, przyklejone; przy przewijaniu tylko wygasa */
+function HeroBackdrop() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const o = Math.min(1, Math.max(0, 1 - window.scrollY / (window.innerHeight * 0.7)));
+      const el = ref.current;
+      if (!el) return;
+      el.style.opacity = o.toFixed(3);
+      el.style.visibility = o === 0 ? "hidden" : "visible";
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+  return (
+    <div
+      ref={ref}
+      className="hero-bg"
+      style={{ backgroundImage: `url(${cityImg})` }}
+      aria-hidden="true"
+    />
+  );
+}
+
 export function Sandbox() {
   const [reduce, setReduce] = useState(false);
   const [open, setOpen] = useState(false); // dotyczy tylko telefonu/tabletu; na desktopie panel jest zawsze otwarty
@@ -780,6 +816,7 @@ export function Sandbox() {
   }, [reduce]);
   return (
     <>
+      <HeroBackdrop />
       <PageDots />
       <ComicCursor />
       <div className="ds ds--open">
