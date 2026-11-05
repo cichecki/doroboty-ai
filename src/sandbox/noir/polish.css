@@ -387,3 +387,11 @@
 .moment.is-open .moment__cta {
   animation: m-bubble 420ms 2300ms var(--ease-out) both;
 }
+
+/* podpis kadru nachodzi na linię ramy (rama jest wcięta przez skośne rogi) */
+.kf .kadr__caption {
+  top: -4px;
+}
+.ctrl-card {
+  margin-top: 6px;
+}
