@@ -7,6 +7,7 @@ import { ComicDialog, NSelect } from "./forms";
 import { IconClose, IconFilter, IconList, IconMap, IconSearch } from "./icons";
 import { JobCard } from "./jobcard";
 import { Segmented } from "./nav";
+import { CategoryTabs } from "./tiles";
 
 const allJobs = publishedJobs(initialState());
 type Key = "cat" | "mode" | "lvl";
@@ -368,6 +369,11 @@ export function FiltersSection() {
       <h2 className="sb-h2" id="filtry-h">
         Filtry i wyniki
       </h2>
+      <h3 className="sb-h3">Zakładki kategorii</h3>
+      <CategoryTabs />
+      <h3 className="sb-h3" style={{ marginTop: 44 }}>
+        Wyszukiwanie i wyniki
+      </h3>
       <FiltersDemo />
     </section>
   );

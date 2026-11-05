@@ -437,3 +437,143 @@
     min-height: calc(100svh - 72px);
   }
 }
+
+/* =====================================================================
+   SKOŚNY OBRYS małych elementów: biała warstwa + wnętrze w kolorze tła.
+   (border + clip-path ucina ramkę na skośnych rogach – nie używać)
+   ===================================================================== */
+.n-outline {
+  position: relative;
+  isolation: isolate;
+  border: 0;
+  background: transparent;
+  clip-path: var(--shape, var(--shape-tag));
+}
+.n-outline::before,
+.n-outline::after {
+  content: "";
+  position: absolute;
+  clip-path: var(--shape, var(--shape-tag));
+  pointer-events: none;
+}
+.n-outline::before {
+  inset: 0;
+  z-index: -2;
+  background: var(--white);
+}
+.n-outline::after {
+  inset: var(--bw, 2.5px);
+  z-index: -1;
+  background: var(--surface, var(--ink));
+  transition: opacity 140ms;
+}
+.n-outline.is-on::after {
+  opacity: 0;
+}
+
+/* zakładki kategorii */
+.ncats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.ncat {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-height: 60px;
+  padding: 16px 20px 14px;
+  color: var(--white);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color 120ms,
+    transform var(--t-hover) var(--ease-spring);
+}
+.ncat b {
+  font: 400 21px/1 var(--f-action);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ncat__sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+.ncat__n {
+  margin-left: auto;
+  font: 400 20px/1 var(--f-action);
+}
+.ncat:hover {
+  transform: rotate(-1deg);
+}
+.ncat:hover::after {
+  background: var(--panel-2);
+}
+.ncat.is-on {
+  color: var(--ink);
+}
+.ncat.is-on .ncat__sub {
+  color: #3a3835;
+}
+.ncat:focus-visible {
+  outline: none;
+}
+.ncat:focus-visible::before {
+  background: repeating-linear-gradient(90deg, var(--white) 0 8px, transparent 8px 12px);
+}
+
+/* logo firmy */
+.nlogo-box {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  color: var(--white);
+  font-family: var(--f-action);
+  letter-spacing: 0.04em;
+  line-height: 1;
+  --shape: polygon(6% 0, 100% 5%, 94% 100%, 0 94%);
+  --bw: 2.5px;
+}
+.nlogo-box img {
+  position: absolute;
+  inset: var(--bw);
+  width: calc(100% - 2 * var(--bw));
+  height: calc(100% - 2 * var(--bw));
+  object-fit: cover;
+  clip-path: var(--shape);
+}
+
+/* kafelek treści */
+.ctiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr));
+  gap: 44px 28px;
+  margin-top: 30px;
+}
+.ctile .kf__content {
+  padding: 46px clamp(32px, 4vw, 48px) 34px;
+}
+.ctile__n {
+  position: absolute;
+  top: -16px;
+  left: 28px;
+  z-index: 3;
+  padding: 6px 14px 4px;
+  background: var(--white);
+  color: var(--ink);
+  font: 400 24px/1 var(--f-action);
+  letter-spacing: 0.04em;
+  clip-path: var(--shape-tag);
+}
+.ctile__title {
+  margin: 0 0 12px;
+  font: 400 clamp(22px, 2.2vw, 28px) / 1.05 var(--f-display);
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.ctile__text {
+  margin: 0;
+  color: #d8d4cb;
+  max-width: 52ch;
+}

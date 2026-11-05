@@ -375,6 +375,13 @@ export function Foundations() {
         <p className="sb-note fd-note">
           Zaokrąglenia: 0 wszędzie poza dymkami. Cienie zawsze twarde, bez rozmycia.
         </p>
+        <ul className="fd-rules">
+          <li>
+            Skośny obrys małego elementu (zakładka, chip, logo): biała warstwa + wnętrze w kolorze
+            tła (.n-outline). Nigdy border + clip-path, bo przycięcie ucina ramkę na rogach.
+          </li>
+          <li>Duże kafle: ramka SVG (Frame) o zmiennej grubości.</li>
+        </ul>
       </Block>
 
       <Block id="fd-status" title="Statusy">

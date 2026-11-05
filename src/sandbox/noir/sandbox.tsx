@@ -11,6 +11,7 @@ import { Forms } from "./forms";
 import { Navigation } from "./nav";
 import { FiltersSection } from "./filters";
 import { Recruiting } from "./recruit";
+import { ContentTilesDemo, LogosDemo } from "./tiles";
 import { PortraitsSection } from "./portraits-section";
 import { CursorSection } from "./cursor-section";
 import { ComicCursor, Frame, PageDots, Portrait, ScoreTag, SpeechBubble } from "./comic";
@@ -311,6 +312,15 @@ function Cards() {
           </div>
         ))}
       </div>
+      <h3 className="sb-h3" style={{ marginTop: 52 }}>
+        Logo firmy
+      </h3>
+      <LogosDemo />
+
+      <h3 className="sb-h3" style={{ marginTop: 52 }}>
+        Kafelek treści
+      </h3>
+      <ContentTilesDemo />
     </Section>
   );
 }
