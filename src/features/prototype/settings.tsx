@@ -4,6 +4,9 @@ import { ConfirmDialog } from "@/components/confirm-dialog";
 import { usePrototype } from "./store";
 import { serializeState, MAX_IMPORT_BYTES } from "./storage";
 import { PageTitle } from "./shell";
+import { researchCsv } from "./scope-export";
+import { NRadioGroup } from "@/sandbox/noir/forms";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export function downloadText(name: string, text: string, type = "application/json") {
   const url = URL.createObjectURL(new Blob([text], { type }));
@@ -16,7 +19,7 @@ export function downloadText(name: string, text: string, type = "application/jso
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 export function SettingsPage() {
-  const { state, reset, importState, original } = usePrototype();
+  const { state, reset, importState, original, run } = usePrototype();
   const [pending, setPending] = useState<"reset" | "import" | null>(null);
   const [raw, setRaw] = useState("");
   const [error, setError] = useState("");
@@ -92,6 +95,44 @@ export function SettingsPage() {
           </p>
         )}
         {message && <p role="status">{message}</p>}
+      </section>
+      <section className="prototype-panel prototype-form mt-6">
+        <h2>Badanie (E3, E6)</h2>
+        <NRadioGroup
+          legend="Wariant formularza kandydata (E3)"
+          name="form-variant"
+          value={state.experiment.formVariant}
+          onChange={(v) =>
+            run({
+              type: "experiment",
+              formVariant: v === "A" ? "A" : "B",
+              multiplier: state.experiment.multiplier,
+            })
+          }
+          options={[
+            ["A", "A: paski bez pól dowodu"],
+            ["B", "B: paski z polami dowodu"],
+          ]}
+        />
+        <label className="flex items-center gap-3">
+          <Checkbox
+            checked={state.experiment.multiplier}
+            onCheckedChange={(checked) =>
+              run({
+                type: "experiment",
+                formVariant: state.experiment.formVariant,
+                multiplier: checked,
+              })
+            }
+          />
+          <span>Match Score z mnożnikiem z pasków (E6), widoczny tylko dla rekrutera</span>
+        </label>
+        <Button
+          variant="outline"
+          onClick={() => downloadText("doroboty-badanie-e3.csv", researchCsv(state), "text/csv")}
+        >
+          Eksportuj dane badania (CSV)
+        </Button>
       </section>
       <section className="prototype-panel prototype-form mt-6">
         <h2>O prototypie</h2>
