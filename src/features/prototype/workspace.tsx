@@ -13,6 +13,8 @@ import { usePrototype } from "./store";
 import { currentPerson, publishedJobs, stageLabels, MIN_APPLICATION_ANSWER_LENGTH } from "./model";
 import { PageTitle, Empty, NotFound, Notice } from "./shell";
 import { CvAttachment } from "./cv-attachment";
+import { Frame, Portrait } from "@/sandbox/noir/comic";
+import { portraitFor } from "@/sandbox/noir/portraits";
 import { MatchScore } from "./match-score";
 import { RecruitingApplication } from "./recruiting-application";
 import { CandidateApplication } from "./candidate-application";
@@ -37,18 +39,45 @@ export function PersonPicker() {
       : state.people;
   const safeNext = next && /^\/(?!\/)/.test(next) && !next.startsWith("/auth") ? next : null;
   return (
-    <section className="prototype-section max-w-4xl">
-      <h1>Wybierz osobę</h1>
-      <p className="mt-4 mb-8 text-muted-foreground">
+    <section className="prototype-section persona-page">
+      <p className="n-kicker">Prototyp · bez haseł i kont</p>
+      <h1>
+        Wybierz <span className="n-accent">osobę</span>
+      </h1>
+      <p className="n-lead persona-page__lead">
         Wybierz profil, z którego chcesz korzystać w prototypie. Hasło nie jest potrzebne.
       </p>
-      <div className="grid gap-5 sm:grid-cols-2">
-        {people.map((person) => (
-          <article key={person.id} className="prototype-panel">
-            <h2 className="text-xl">{person.name}</h2>
-            <p className="my-4 text-muted-foreground">{person.headline}</p>
+      <div className="npersona">
+        {people.map((person, index) => (
+          <Frame
+            as="article"
+            key={person.id}
+            seed={120 + index * 5}
+            hoverMorph
+            dots
+            className="npersona__card"
+          >
+            <div className="npersona__head">
+              <Portrait
+                gender={person.name.split(" ")[0].endsWith("a") ? "f" : "m"}
+                size={64}
+                seed={index + 30}
+                src={portraitFor(person.id)}
+              />
+              <div>
+                <span className="tag-cat tag-cat--sm tag-cat--grey">
+                  {person.role === "employer"
+                    ? "Firma"
+                    : person.role === "candidate"
+                      ? "Kandydat"
+                      : "Prowadzący"}
+                </span>
+                <h2 className="npersona__name">{person.name}</h2>
+                <p className="npersona__line">{person.headline}</p>
+              </div>
+            </div>
             <Button
-              variant="outline"
+              size="sm"
               onClick={() => {
                 run({ type: "select_person", id: person.id });
                 navigate(
@@ -62,7 +91,7 @@ export function PersonPicker() {
             >
               Wejdź jako {person.name}
             </Button>
-          </article>
+          </Frame>
         ))}
       </div>
     </section>
@@ -119,9 +148,9 @@ export function WorkspaceHome() {
               .length,
           ],
         ].map(([label, value]) => (
-          <div className="prototype-panel" key={label}>
-            <p className="text-muted-foreground">{label}</p>
-            <strong className="mt-3 block text-3xl">{value}</strong>
+          <div className="prototype-panel n-stat" key={label}>
+            <p className="n-kicker">{label}</p>
+            <strong className="n-stat__value">{value}</strong>
           </div>
         ))}
       </div>
@@ -217,7 +246,11 @@ export function SavedPage() {
     <>
       <PageTitle>Zapisane oferty</PageTitle>
       {jobs.length ? (
-        jobs.map((job) => <JobCard key={job.id} job={job} saved />)
+        <div className="pp-job-list">
+          {jobs.map((job) => (
+            <JobCard key={job.id} job={job} saved />
+          ))}
+        </div>
       ) : (
         <Empty>
           <p className="mb-4">Nie masz jeszcze zapisanych ofert.</p>
@@ -376,6 +409,7 @@ export function ApplyPage() {
               <Button
                 ref={sendButton}
                 type="submit"
+                variant="master"
                 disabled={submitted}
                 className="application-send"
               >
@@ -433,29 +467,46 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
       <Field label={employer ? "Szukaj kandydata lub oferty" : "Szukaj oferty"}>
         <Input value={query} onChange={(e) => setQuery(e.target.value)} />
       </Field>
-      <div className="mt-6 space-y-4">
+      <div className="app-list">
         {applications.length ? (
-          applications.map((a) => (
-            <article className="prototype-panel" key={a.id}>
-              <div className="flex flex-wrap items-start justify-between gap-4">
-                <div>
-                  <Link
-                    className="text-xl font-semibold text-[var(--gui-link)]"
-                    to={`${employer ? "/app/kandydaci" : "/app/aplikacje"}/${a.id}`}
-                  >
-                    {employer ? a.candidateName : a.jobTitle}
-                  </Link>
-                  <p className="my-3 text-muted-foreground">
+          applications.map((a, index) => (
+            <Frame
+              as="article"
+              key={a.id}
+              seed={60 + index * 9}
+              hoverMorph
+              className="ccard app-card"
+              aria-labelledby={`application-${a.id}`}
+            >
+              <MatchScore score={a.score} />
+              <div className="ccard__head">
+                {employer && (
+                  <Portrait
+                    gender={a.candidateName.split(" ")[0].endsWith("a") ? "f" : "m"}
+                    src={portraitFor(a.candidateId)}
+                    seed={index + 40}
+                    size={72}
+                  />
+                )}
+                <div className="ccard__id">
+                  <h2 className="ccard__name" id={`application-${a.id}`}>
+                    <Link to={`${employer ? "/app/kandydaci" : "/app/aplikacje"}/${a.id}`}>
+                      {employer ? a.candidateName : a.jobTitle}
+                    </Link>
+                  </h2>
+                  <p className="app-card__sub">
                     {employer
                       ? a.jobTitle
                       : state.companies.find((x) => x.id === a.companyId)?.name}
                   </p>
-                  <p>{stageLabels[a.stage]}</p>
+                  <p className="ccard__stage">
+                    <span className="stage-dot" aria-hidden="true" />
+                    <span>{stageLabels[a.stage]}</span>
+                  </p>
                 </div>
-                <MatchScore score={a.score} />
               </div>
-              {employer && <p className="mt-4 text-muted-foreground">{a.summary}</p>}
-            </article>
+              {employer && <p className="app-card__summary">{a.summary}</p>}
+            </Frame>
           ))
         ) : (
           <Empty>Brak aplikacji spełniających kryteria.</Empty>

@@ -7,7 +7,7 @@ import { BackLink } from "@/components/back-link";
 import { ResponsivePanel } from "@/components/responsive-panel";
 import { SalaryFact } from "@/features/jobs/salary-fact";
 import { functionLabels } from "@/features/jobs/presentation";
-import peopleArt from "../../../docs/design-system/agent-kit/assets/people.png";
+import advisorArt from "@/sandbox/noir/img/doradca-cut.webp";
 import { CompanyLogo } from "@/features/jobs/company-logo";
 import { JobCard } from "@/features/jobs/job-card";
 import { JobFiltersForm } from "@/features/jobs/job-filters";
@@ -26,6 +26,14 @@ import { usePrototype } from "./store";
 import { currentPerson, publishedJobs } from "./model";
 import { NotFound } from "./shell";
 import { cn } from "@/lib/utils";
+
+/* Each category tab gets its own slightly skewed outline (design system CategoryTabs). */
+const categoryShapes = [
+  "polygon(0 0, 100% 4%, 98% 100%, 1% 94%)",
+  "polygon(1% 5%, 100% 0, 99% 95%, 0 100%)",
+  "polygon(0 3%, 99% 0, 100% 100%, 2% 96%)",
+  "polygon(2% 0, 100% 6%, 98% 97%, 0 100%)",
+];
 
 function LocalMap({ jobs }: { jobs: JobWithCompany[] }) {
   const [selected, setSelected] = useState<string | null>(null);
@@ -166,11 +174,7 @@ export function JobsPage() {
                 Znajdź rolę, w której zrobisz coś dobrego.
               </p>
             </div>
-            <img
-              className="pp-people-art"
-              src={peopleArt}
-              alt="Dwie osoby pracujące razem z laptopem"
-            />
+            <img className="pp-people-art pp-advisor-art" src={advisorArt} alt="" />
           </div>
           <form
             key={`${filters.query ?? ""}:${filters.location ?? ""}`}
@@ -219,18 +223,20 @@ export function JobsPage() {
                 ["apply", "Apply", "Wdrażaj AI"],
                 ["lead", "Lead", "Wyznaczaj kierunek"],
               ] as const
-            ).map(([key, label, description]) => (
+            ).map(([key, label, description], index) => (
               <button
                 key={key}
-                className={cn("pp-category-tab", (filters.category ?? "") === key && "pp-selected")}
+                className={cn(
+                  "pp-category-tab ncat n-outline",
+                  (filters.category ?? "") === key && "pp-selected is-on",
+                )}
+                style={{ ["--shape" as string]: categoryShapes[index % categoryShapes.length] }}
                 aria-pressed={(filters.category ?? "") === key}
                 onClick={() => change("category", key)}
               >
-                <span>
-                  <b>{label}</b>
-                  <small>{description}</small>
-                </span>
-                <span className="pp-category-count">
+                <b>{label}</b>
+                {description && <span className="ncat__sub">{description}</span>}
+                <span className="ncat__n">
                   {filterJobs(all, { ...filters, category: key || undefined }).length}
                 </span>
               </button>
@@ -480,7 +486,7 @@ export function JobPage() {
                 Oferty tej firmy <ArrowRight />
               </Link>
             </div>
-            <img src={peopleArt} alt="" />
+            <img className="pp-advisor-art" src={advisorArt} alt="" />
           </div>
         </section>
       </div>

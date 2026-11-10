@@ -265,7 +265,7 @@ export function EmployerJobEditor() {
             {error}
           </p>
         )}
-        <Button type="submit" disabled={!approved}>
+        <Button type="submit" variant="master" disabled={!approved}>
           Opublikuj ofertę
         </Button>
       </form>

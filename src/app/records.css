@@ -2,14 +2,14 @@
 .record-sheet {
   min-width: 0;
   padding: 24px 28px;
-  border: 1px solid var(--gui-text);
-  border-radius: 24px;
-  background: white;
+  border: 3px solid var(--gui-text);
+  border-radius: 0;
+  background: var(--panel);
 }
 .record-tabs {
   display: flex;
   gap: 16px;
-  border-bottom: 1px solid #d8d5d1;
+  border-bottom: 2px solid var(--line);
   margin-bottom: 22px;
 }
 .record-tabs .record-tab {
@@ -57,7 +57,7 @@
 }
 .record-section {
   padding: 24px 0;
-  border-top: 1px solid #d8d5d1;
+  border-top: 2px solid var(--line);
 }
 .record-section :is(h2, h3) {
   margin-bottom: 8px;
@@ -68,7 +68,7 @@
 }
 .record-footer {
   padding-top: 20px;
-  border-top: 1px solid #d8d5d1;
+  border-top: 2px solid var(--line);
 }
 .record-caption {
   color: var(--gui-text-muted);
@@ -135,7 +135,7 @@
   left: 0;
   width: 9px;
   height: 9px;
-  border: 1px solid var(--gui-text);
+  border: 2px solid var(--gui-text);
   border-radius: 50%;
   background: var(--gui-text);
   content: "";
@@ -146,7 +146,7 @@
   bottom: -7px;
   left: 4px;
   width: 1px;
-  background: #d8d5d1;
+  background: var(--line);
   content: "";
 }
 .process-timeline li:last-child::after {
@@ -206,8 +206,8 @@
 }
 .record-stage {
   padding: 3px 12px;
-  border-radius: 18px;
-  background: #ffe0f7;
+  border-radius: 0;
+  background: var(--panel-2);
 }
 .record-stage:focus {
   outline: 2px solid var(--gui-focus);
@@ -333,7 +333,7 @@
   width: 100%;
   height: clamp(420px, 72vh, 800px);
   margin-top: 22px;
-  border: 1px solid var(--gui-edge);
-  border-radius: 10px;
+  border: 3px solid var(--gui-edge);
+  border-radius: 0;
   background: var(--gui-canvas);
 }

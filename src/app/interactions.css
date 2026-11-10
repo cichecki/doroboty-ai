@@ -27,17 +27,17 @@
     input[type="button"],
     input[type="reset"]
   ):not(:disabled, [aria-disabled="true"], [data-disabled]):hover {
-  background-color: var(--control-hover-bg, var(--gui-color-1-transparent));
-  color: var(--control-hover-text, var(--gui-text));
+  background-color: var(--control-hover-bg, transparent);
+  color: var(--control-hover-text, inherit);
 }
 
 /* Selected navigation stays visibly selected during hover. */
 :where(.nav-active, .pp-category-tab.pp-selected, .pp-view-link[aria-current="page"]) {
-  --control-hover-bg: var(--gui-neutral-9);
-  --control-hover-text: white;
+  --control-hover-bg: var(--white);
+  --control-hover-text: var(--ink);
 }
 /* Preserve the checked checkbox treatment rather than replacing it with a quiet action. */
 [role="checkbox"][aria-checked="true"] {
-  --control-hover-bg: var(--gui-neutral-9);
-  --control-hover-text: white;
+  --control-hover-bg: var(--white);
+  --control-hover-text: var(--ink);
 }

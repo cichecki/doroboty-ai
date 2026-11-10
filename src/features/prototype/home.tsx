@@ -1,13 +1,12 @@
+import { useRef } from "react";
 import { Link } from "react-router";
 import { ArrowRight } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants, MasterBody, masterClassName } from "@/components/ui/button";
 import { JobCard } from "@/features/jobs/job-card";
+import { Frame, SpeechBubble } from "@/sandbox/noir/comic";
+import advisorImg from "@/sandbox/noir/img/doradca-cut.webp";
 import { usePrototype } from "./store";
 import { publishedJobs } from "./model";
-import { cn } from "@/lib/utils";
-
-import peopleArt from "../../../docs/design-system/agent-kit/assets/people.png";
 
 const categories = [
   {
@@ -30,83 +29,96 @@ const categories = [
 export default function HomePage() {
   const { state } = usePrototype();
   const latestJobs = publishedJobs(state).slice(0, 4);
+  const advisor = useRef<HTMLImageElement>(null);
 
   return (
     <>
-      <section className="home-intro bg-muted/25 shadow-[var(--gui-divider-bottom-shadow)]">
-        <div className="mx-auto grid max-w-[1360px] gap-12 px-5 py-16 lg:grid-cols-[1.3fr_0.7fr] lg:px-8 lg:py-24">
-          <div>
-            <Badge variant="secondary" className="px-3 py-1 text-xs">
-              Dobra robota. Z AI w środku.
-            </Badge>
-            <h1 className="mt-6 max-w-4xl text-5xl leading-[var(--gui-leading-xxl)] font-semibold tracking-[var(--gui-tracking-xs)] sm:text-6xl lg:text-7xl">
-              Praca dla ludzi, którzy dowożą z AI.
+      <section className="home-hero">
+        <div className="home-hero__inner">
+          <div className="home-hero__copy">
+            <span className="tag-cat tag-cat--grey">Dobra robota. Z AI w środku.</span>
+            <h1>
+              Praca dla ludzi, którzy <span className="n-accent">dowożą z AI.</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+            <p className="n-lead">
               Wyselekcjonowane role, w których AI jest częścią odpowiedzialności, decyzji i wyniku
               pracy — nie dopiskiem w employer brandingu.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/oferty" className={buttonVariants({ size: "lg" })}>
-                Zobacz oferty <ArrowRight />
+            <div className="home-hero__actions">
+              <Link to="/oferty" className={masterClassName("lg")}>
+                <MasterBody>
+                  Zobacz oferty <ArrowRight />
+                </MasterBody>
               </Link>
               <Link
                 to="/metodologia"
-                className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+                className={buttonVariants({ variant: "outline", size: "lg" })}
               >
                 Jak wybieramy role
               </Link>
             </div>
           </div>
-          <img className="people-art" src={peopleArt} alt="Dwie osoby pracujące razem z laptopem" />
+          <div className="home-hero__art" aria-hidden="true">
+            <SpeechBubble
+              variant="burst"
+              className="home-hero__bubble"
+              target={advisor}
+              gap={40}
+              tailWidth={14}
+            >
+              AI w roli, nie w nagłówku!
+            </SpeechBubble>
+            <img ref={advisor} className="home-hero__advisor" src={advisorImg} alt="" />
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1360px] px-5 py-16 lg:px-8 lg:py-20">
-        <p className="text-xs font-medium tracking-[var(--gui-tracking-xl)] text-muted-foreground">
-          Trzy sposoby pracy z AI
-        </p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-[var(--gui-tracking-s)] sm:text-4xl">
-          Build. Apply. Lead.
-        </h2>
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
+      <section className="n-section">
+        <div className="n-section__head">
+          <div>
+            <p className="n-kicker">Trzy sposoby pracy z AI</p>
+            <h2>
+              Build. Apply. <span className="n-accent">Lead.</span>
+            </h2>
+          </div>
+        </div>
+        <div className="home-cats">
           {categories.map((category, index) => (
-            <article key={category.slug} className="prototype-panel">
-              <span className="text-xs font-medium text-muted-foreground">0{index + 1}</span>
-              <h3 className="mt-3 text-xl font-semibold">{category.label}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {category.description}
-              </p>
+            <Frame
+              as="article"
+              key={category.slug}
+              seed={40 + index * 7}
+              skew={12 + index * 3}
+              hoverMorph
+              dots
+              className="home-cat"
+            >
+              <span className="kadr__caption">0{index + 1}</span>
+              <h3 className="home-cat__title">{category.label}</h3>
+              <p className="home-cat__text">{category.description}</p>
               <Link
-                className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-[var(--gui-link)] hover:underline"
+                className={buttonVariants({ variant: "link" })}
                 to={`/oferty?category=${category.slug}`}
               >
-                Przeglądaj role <ArrowRight className="size-4" />
+                Przeglądaj role <ArrowRight />
               </Link>
-            </article>
+            </Frame>
           ))}
         </div>
       </section>
 
-      <section className="bg-muted/25 shadow-[var(--gui-divider-top-shadow)]">
-        <div className="mx-auto max-w-[1360px] px-5 py-16 lg:px-8 lg:py-20">
-          <div className="flex flex-wrap items-end justify-between gap-5">
+      <section className="n-band">
+        <div className="n-section">
+          <div className="n-section__head">
             <div>
-              <p className="text-xs font-medium tracking-[var(--gui-tracking-xl)] text-muted-foreground">
-                Aktualne role
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[var(--gui-tracking-s)] sm:text-4xl">
-                Najnowsze oferty
-              </h2>
+              <p className="n-kicker">Aktualne role</p>
+              <h2>Najnowsze oferty</h2>
             </div>
-            <Link
-              className="inline-flex items-center gap-2 text-sm font-medium text-[var(--gui-link)] hover:underline"
-              to="/oferty"
-            >
-              Wszystkie oferty <ArrowRight className="size-4" />
+            <Link className={buttonVariants({ variant: "outline", size: "sm" })} to="/oferty">
+              Wszystkie oferty <ArrowRight />
             </Link>
           </div>
-          <div className="mt-8 pp-job-list">
+          <div className="pp-job-list">
             {latestJobs.map((job) => (
               <JobCard key={job.id} job={job} />
             ))}

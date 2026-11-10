@@ -22,8 +22,8 @@
   left: auto;
 }
 .pp-search-submit {
-  border: 1px solid var(--pp-ink);
-  border-radius: 18px;
+  border: 3px solid var(--pp-ink);
+  border-radius: 0;
   background: var(--pp-action);
   font-size: 14px;
   font-weight: 600;
@@ -41,16 +41,16 @@
 .pp-view-link {
   font-size: 12px;
   padding: 8px;
-  border-radius: 10px;
+  border-radius: 0;
 }
 .pp-view-link[aria-current="page"] {
   background: var(--pp-ink);
-  color: white;
+  color: var(--pp-on-ink);
 }
 .pp-filter-button {
-  border: 1px solid var(--pp-ink);
-  border-radius: 18px;
-  background: white;
+  border: 3px solid var(--pp-ink);
+  border-radius: 0;
+  background: var(--pp-surface);
 }
 .pp-filter-dialog[data-slot="dialog-content"] {
   inset: 0;
@@ -66,7 +66,7 @@
   gap: 0;
   border: 0;
   overflow: hidden;
-  background: white;
+  background: var(--pp-surface);
 }
 .pp-filter-dialog .pp-dialog-heading {
   flex-shrink: 0;
@@ -92,8 +92,8 @@
   margin: 25px 0 0 22px;
   width: 43px;
   height: 43px;
-  border: 1px solid var(--pp-ink);
-  border-radius: 18px;
+  border: 3px solid var(--pp-ink);
+  border-radius: 0;
   background: var(--pp-paper);
   font-size: 17px;
 }
@@ -107,8 +107,8 @@
 .pp-offer-identity > [data-company-logo] {
   width: 60px;
   height: 60px;
-  border: 1px solid var(--pp-ink);
-  border-radius: 18px;
+  border: 3px solid var(--pp-ink);
+  border-radius: 0;
   background: var(--pp-fact);
 }
 .pp-offer-identity .pp-icon {
@@ -160,8 +160,8 @@
 .pp-offer-employer [data-company-logo] {
   width: 55px;
   height: 55px;
-  border: 1px solid var(--pp-ink);
-  border-radius: 16px;
+  border: 3px solid var(--pp-ink);
+  border-radius: 0;
 }
 .pp-employer-copy a {
   margin-top: 20px;
@@ -271,7 +271,7 @@
 }
 .pp-page-button[aria-current="page"] {
   background: var(--pp-ink);
-  color: white;
+  color: var(--pp-on-ink);
 }
 @media (max-width: 360px) {
   header a[aria-label="DoRoboty.ai — strona główna"] {

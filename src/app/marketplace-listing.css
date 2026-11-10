@@ -1,6 +1,6 @@
 /* Extracted from the accepted prototype. See CHANGES.md and provenance.json. */
 .pp-intro-section {
-  border-bottom: 1px solid var(--pp-ink);
+  border-bottom: 2px solid var(--pp-ink);
 }
 .pp-intro-grid {
   display: grid;
@@ -28,7 +28,7 @@
   right: -8px;
   bottom: 2px;
   height: 20px;
-  border-radius: 8px;
+  border-radius: 0;
   background: var(--pp-action);
   transform: rotate(-1deg);
 }
@@ -78,7 +78,7 @@
   line-height: 1.2;
 }
 .pp-results-title > span {
-  border: 1px solid var(--pp-ink);
+  border: 3px solid var(--pp-ink);
   border-radius: var(--pp-radius-small);
   padding: 0 7px;
   min-height: 26px;

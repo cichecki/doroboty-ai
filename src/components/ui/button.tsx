@@ -2,55 +2,107 @@ import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-[var(--gui-radius-s)] border-0 font-semibold whitespace-nowrap outline-none select-none transition-[transform,background-color,color,opacity] [transition-duration:var(--gui-motion-small)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gui-focus)] active:not-aria-[haspopup]:translate-y-[var(--gui-press-offset)] disabled:pointer-events-none disabled:bg-[var(--gui-control-disabled)] disabled:text-[var(--gui-neutral-6)] disabled:opacity-100 aria-invalid:outline-2 aria-invalid:outline-[var(--gui-error)] [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-  {
-    variants: {
-      variant: {
-        default:
-          "bg-[var(--gui-color-1)] text-[var(--gui-text)] [--control-hover-bg:#ffacef] shadow-[var(--gui-edge-shadow)]",
-        outline:
-          "bg-white shadow-[var(--gui-edge-shadow)] text-[var(--gui-text)] [--control-hover-bg:var(--gui-color-1-transparent)] aria-expanded:bg-[var(--gui-neutral-3-transparent)]",
-        secondary:
-          "bg-[var(--gui-surface-muted)] text-[var(--gui-text)] [--control-hover-bg:var(--gui-neutral-4)] aria-expanded:bg-[var(--gui-neutral-4-transparent)]",
-        ghost:
-          "bg-transparent text-[var(--gui-text)] [--control-hover-bg:var(--gui-color-1-transparent)]",
-        destructive:
-          "bg-[var(--gui-error)] [--control-hover-bg:color-mix(in_srgb,var(--gui-error)_85%,var(--gui-text))] text-[var(--gui-neutral-10)] focus-visible:outline-[var(--gui-focus)]",
-        link: "bg-transparent px-0 text-[var(--gui-link)] underline-offset-4 hover:underline [--control-hover-bg:var(--gui-color-1-transparent)]",
-      },
-      size: {
-        default:
-          "min-h-12 gap-[var(--gui-space-xs)] px-[var(--gui-space-l)] py-[var(--gui-space-s)] text-[length:var(--gui-text-s)] leading-[var(--gui-leading-s)] tracking-[var(--gui-tracking-l)]",
-        xs: "min-h-8 gap-[var(--gui-space-xxs)] rounded-[var(--gui-radius-xs)] px-[var(--gui-space-xs)] py-[var(--gui-space-xxs)] text-[length:var(--gui-text-xs)] leading-[var(--gui-leading-xs)] tracking-[var(--gui-tracking-l)] [&_svg:not([class*='size-'])]:size-3",
-        sm: "min-h-10 gap-[var(--gui-space-xxs)] px-[var(--gui-space-s)] py-[var(--gui-space-xs)] text-[length:var(--gui-text-xs)] leading-[var(--gui-leading-xs)] tracking-[var(--gui-tracking-l)] [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "min-h-14 gap-[var(--gui-space-xs)] px-[var(--gui-space-xl)] py-[var(--gui-space-s)] text-[length:var(--gui-text-m)] leading-[var(--gui-leading-m)]",
-        icon: "size-12 p-0",
-        "icon-xs": "size-8 rounded-[var(--gui-radius-xs)] p-0 [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm": "size-10 p-0 [&_svg:not([class*='size-'])]:size-3.5",
-        "icon-lg": "size-14 p-0",
-      },
+/*
+ * Noir button recipe (see .nb in src/app/noir-host.css). The skewed shape is painted by a
+ * pseudo-element, so the same classes work on <button>, <a> and <label> without inner markup,
+ * and the dashed focus outline is never clipped.
+ * The master variant renders the design system NButton markup instead (stripe wave + glints).
+ * Use <Button variant="master"> for buttons; for links put <MasterBody> inside a link with
+ * masterClassName(size), so the link keeps its link semantics.
+ */
+const buttonVariants = cva("nb", {
+  variants: {
+    variant: {
+      master: "nb--master",
+      default: "nb--primary",
+      outline: "nb--secondary",
+      secondary: "nb--quiet",
+      ghost: "nb--ghost",
+      destructive: "nb--danger",
+      link: "nb--link",
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
+    size: {
+      default: "nb--md",
+      xs: "nb--xs",
+      sm: "nb--sm",
+      lg: "nb--lg",
+      icon: "nb--icon",
+      "icon-xs": "nb--icon nb--icon-xs",
+      "icon-sm": "nb--icon nb--icon-sm",
+      "icon-lg": "nb--icon nb--icon-lg",
     },
   },
-);
+  defaultVariants: {
+    variant: "default",
+    size: "default",
+  },
+});
+
+function Glint({ small }: { small?: boolean }) {
+  return (
+    <svg
+      className={`nbtn__glint${small ? " nbtn__glint--small" : ""}`}
+      viewBox="0 0 30 30"
+      aria-hidden="true"
+    >
+      <path d="M15 1 L18 12 L29 15 L18 18 L15 29 L12 18 L1 15 L12 12 Z" />
+    </svg>
+  );
+}
+
+/** Inner markup of the design system master button: stripe wave, label and two glints. */
+function MasterBody({ children, glints = true }: { children: React.ReactNode; glints?: boolean }) {
+  return (
+    <>
+      <span className="nbtn__body">
+        <span className="nbtn__wave" aria-hidden="true" />
+        <span className="nbtn__label">{children}</span>
+      </span>
+      {glints && (
+        <>
+          <Glint />
+          <Glint small />
+        </>
+      )}
+    </>
+  );
+}
+
+function masterClassName(size: VariantProps<typeof buttonVariants>["size"] = "default") {
+  return cn(
+    "nbtn nbtn--master",
+    (size === "sm" || size === "xs") && "nbtn--sm",
+    size === "lg" && "nbtn--lg",
+  );
+}
 
 function Button({
   className,
   variant = "default",
   size = "default",
+  children,
   ...props
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+  if (variant === "master")
+    return (
+      <ButtonPrimitive
+        data-slot="button"
+        data-stripes={3}
+        className={cn(masterClassName(size), className)}
+        {...props}
+      >
+        <MasterBody glints={!props.disabled}>{children as React.ReactNode}</MasterBody>
+      </ButtonPrimitive>
+    );
   return (
     <ButtonPrimitive
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    />
+    >
+      {children}
+    </ButtonPrimitive>
   );
 }
 
-export { Button, buttonVariants };
+export { Button, buttonVariants, MasterBody, masterClassName };

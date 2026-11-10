@@ -1,217 +1,50 @@
-/* Shared host recipes for screens outside the canonical marketplace. */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-[data-slot="dialog-title"],
-[data-slot="alert-dialog-title"] {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-synthesis: none;
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-h1 {
-  font-size: 52px;
-  line-height: 1.06;
-  letter-spacing: -1.5px;
-}
-h2 {
-  font-size: 32px;
-  line-height: 1.2;
-  letter-spacing: -0.8px;
-}
-h3 {
-  font-size: 26px;
-  line-height: 1.2;
-  letter-spacing: -0.5px;
-}
-body {
-  letter-spacing: 0;
-}
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 3px solid var(--gui-focus);
-  outline-offset: 4px;
-}
-.brand {
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 700;
-  letter-spacing: -1.2px;
-}
-.brand-mark {
-  border: 1px solid var(--foreground);
-  border-radius: 10px;
-}
-header:has([aria-label="Główna nawigacja"]) {
-  background: #fff;
-  backdrop-filter: none;
-}
-header:has([aria-label="Główna nawigacja"]) > div {
-  height: 80px;
-  max-width: 1280px;
-  padding-inline: 40px;
-}
-header a[aria-label="DoRoboty.ai — strona główna"] {
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -1.7px;
-  line-height: 1;
-}
-footer {
-  background: #fff;
-}
-.home-intro > div {
-  max-width: 1280px;
-  align-items: center;
-  padding-block: 64px;
-}
-.home-intro h1 {
-  font-size: 72px;
-  line-height: 1.02;
-  letter-spacing: -2.5px;
-}
-.people-art {
-  width: 100%;
-  max-width: 420px;
-  justify-self: center;
-}
+/* Shared host recipes for screens outside the marketplace (noir adaptation).
+   Base headings, focus, shell and panels live in noir-host.css. */
 .prototype-section {
   max-width: 1280px;
   padding-block: 48px;
 }
-.prototype-panel,
 .metric-card,
 .visitors-card,
 .success-panel {
-  border-radius: 24px;
-  background: #fff;
+  border-radius: 0;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 3px var(--white);
 }
 .prototype-panel h2 {
   margin-bottom: 12px;
 }
 .prototype-form {
-  padding: 28px;
-  background: #fff;
-  border: 1px solid var(--foreground);
-  border-radius: 24px;
   width: 100%;
-  box-shadow: none;
+  padding: 28px;
+  border: 0;
+  border-radius: 0;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 3px var(--white);
 }
 .prototype-panel .prototype-form {
   padding: 0;
-  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 .field {
   font-size: 14px;
   line-height: 1.6;
 }
 .field > span:first-child {
-  font-weight: 600;
+  font-weight: 700;
 }
-.prototype-notice {
-  background: #ffe0f7;
-  border: 1px solid var(--foreground);
-  border-radius: 18px;
-  line-height: 1.6;
-}
-.prototype-error,
-.error-message {
-  border: 1px solid var(--gui-error);
-}
-.nav-active,
-.nav-active:hover {
-  background: #181818;
-  color: #fff;
-}
-.sidebar,
-.topbar {
-  background: #fff;
-}
-.workspace-label {
-  padding-block: 24px;
-}
-.workspace-avatar {
-  background: #ffe0f7;
-  border-radius: 10px;
-  flex-shrink: 0;
-}
-.main-content {
-  padding: 40px;
-}
-.topbar {
-  min-height: 72px;
-}
-.page-heading {
-  padding-block: 8px 20px;
-  border-bottom: 1px solid #d8d5d1;
-}
-.page-heading h1 {
-  font-size: 52px;
-}
-.native-select {
-  border: 1px solid var(--foreground);
-}
-[data-slot="select-trigger"] {
-  box-shadow: var(--gui-edge-shadow);
-}
-[data-slot="checkbox"] {
-  border-radius: 5px;
-  box-shadow: var(--gui-edge-shadow);
-}
-[data-slot="badge"] {
-  box-shadow: inset 0 0 0 1px #d8d5d1;
-  white-space: normal;
-}
-[data-slot="dialog-content"],
-[data-slot="alert-dialog-content"] {
-  border: 1px solid #181818;
-}
-@media (max-width: 1100px) {
-  .home-intro h1 {
-    font-size: 58px;
-  }
-}
-@media (max-width: 850px) {
-  .home-intro h1 {
-    font-size: 52px;
-  }
+.people-art {
+  width: 100%;
+  max-width: 420px;
+  justify-self: center;
 }
 @media (max-width: 600px) {
-  h1,
-  .page-heading h1 {
-    font-size: 38px;
-  }
-  header:has([aria-label="Główna nawigacja"]) > div {
-    height: 72px;
-    padding-inline: 18px;
-  }
-  header a[aria-label="DoRoboty.ai — strona główna"] {
-    font-size: 25px;
-  }
-  .main-content {
-    padding: 24px 18px;
-  }
   .prototype-section {
     padding-inline: 18px;
   }
   .prototype-form {
     padding: 20px;
-  }
-  .home-intro > div {
-    gap: 28px;
-    padding-block: 36px;
-  }
-  .home-intro h1 {
-    font-size: 43px;
-  }
-  .people-art {
-    max-width: 230px;
   }
 }
 
@@ -220,13 +53,13 @@ footer {
   display: inline-flex;
   align-items: center;
   max-width: 100%;
-  padding: 3px 12px;
-  border-radius: 18px;
-  color: var(--gui-text);
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.6;
+  padding: 5px 12px 3px;
+  border-radius: 0;
+  color: var(--white);
+  clip-path: var(--shape-score);
+  font: 400 16px/1 var(--f-action);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 .match-score[data-score-band="red"] {
   background: var(--gui-match-red);
@@ -239,6 +72,7 @@ footer {
 }
 .match-score[data-score-band="green"] {
   background: var(--gui-match-green);
+  color: var(--white);
 }
 
 /* C13 context returns share one anatomy across public and workspace screens. */
@@ -248,25 +82,28 @@ footer {
   gap: 9px;
   min-height: 36px;
   max-width: 100%;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--gui-text);
+  font: 600 15px/1.4 var(--f-ui);
+  color: var(--white);
+  text-decoration: none;
 }
 .back-link svg {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
-  stroke-width: 1.65;
+  stroke-width: 2.6;
+  transition: translate var(--t-hover) var(--ease-spring);
+}
+.back-link:hover svg {
+  translate: -5px 0;
 }
 .back-link:hover {
   text-decoration: underline;
+  text-decoration-thickness: 2px;
   text-underline-offset: 4px;
 }
 @media (max-width: 700px) {
   .back-link {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
 
@@ -282,7 +119,7 @@ footer {
   position: absolute;
   width: 6px;
   height: 10px;
-  border-radius: 1px;
+  border-radius: 0;
   animation: confetti-burst 850ms ease-out both;
 }
 .confetti-burst span:nth-child(3n) {
