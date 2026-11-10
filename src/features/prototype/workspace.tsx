@@ -281,15 +281,18 @@ export function ApplyPage() {
   const [project, setProject] = useState("");
   const [scope, setScope] = useState<ScopeDraft>({});
   const projectInput = useRef<HTMLInputElement>(null);
-  const scopeOpened = useRef(false);
+  const openedFor = useRef<string | null>(null);
   const openedAt = useRef(0);
   const jobId = job?.id;
+  const alreadyApplied = state.applications.some(
+    (x) => x.jobId === jobId && x.candidateId === person.id,
+  );
   useEffect(() => {
-    if (!jobId || scopeOpened.current) return;
-    scopeOpened.current = true;
+    if (!jobId || alreadyApplied || openedFor.current === jobId) return;
+    openedFor.current = jobId;
     openedAt.current = Date.now();
     run({ type: "scope_open", jobId });
-  }, [jobId, run]);
+  }, [jobId, alreadyApplied, run]);
   const answerInput = useRef<HTMLTextAreaElement>(null);
   const sendButton = useRef<HTMLButtonElement>(null);
   const submittedOnce = useRef(false);

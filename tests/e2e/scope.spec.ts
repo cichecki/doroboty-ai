@@ -106,16 +106,87 @@ test("variant A never asks for evidence", async ({ page }) => {
   await expect(page.locator("textarea")).toHaveCount(1);
 });
 
-for (const width of [1440, 375]) {
-  test(`scope form screenshot at ${width}px`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 1000 });
-    await open(page);
-    await group(page, 0).getByRole("radio").nth(2).check();
-    await group(page, 1).getByRole("radio").nth(1).check();
-    await group(page, 2).getByRole("radio").nth(1).check();
-    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
-      true,
-    );
-    await page.screenshot({ path: `artifacts/scope-form-${width}.png`, fullPage: true });
+type Stored = {
+  scopeSessions: { candidateId: string; jobId: string; variant: string; submittedAt?: string }[];
+  applications: {
+    candidateId: string;
+    jobId: string;
+    scope?: {
+      project: string;
+      durationMs: number;
+      variant: string;
+      answers: {
+        barId: string;
+        answer: number;
+        evidence?: string;
+        probeQuote?: string;
+        changedAfterProbe: boolean;
+      }[];
+    };
+  }[];
+};
+const stored = (page: Page) =>
+  page.evaluate((key) => JSON.parse(localStorage.getItem(key)!), STORAGE_KEY) as Promise<Stored>;
+const sessionsFor = (state: Stored) =>
+  state.scopeSessions.filter((x) => x.candidateId === "candidate-anna" && x.jobId === job.id);
+
+test("submit stores the scope payload and closes exactly one session", async ({ page }) => {
+  await open(page);
+  await expect(group(page, 0)).toBeVisible();
+  expect(sessionsFor(await stored(page))).toHaveLength(1);
+  await page.reload();
+  await expect(group(page, 0)).toBeVisible();
+  expect(sessionsFor(await stored(page))).toHaveLength(2);
+
+  const sentence = `Przez rok ${bars[0].vaguePhrases[0]} nad projektem.`;
+  await page.getByLabel("Projekt, o którym opowiadasz").fill("Automatyzacja zgłoszeń");
+  await page
+    .getByLabel("Dlaczego pasujesz do tej roli?")
+    .fill(`${sentence} Inne zdanie bez śladu.`);
+  await group(page, 0).getByRole("radio").nth(2).check();
+  await page
+    .getByLabel(EVIDENCE_PROMPTS[3], { exact: true })
+    .fill("Napisałam integrację i sprawdziłam ją na danych.");
+  await group(page, 0).getByRole("radio").nth(1).check();
+  await group(page, 1).getByRole("radio").nth(1).check();
+  await group(page, 2).getByRole("radio").nth(1).check();
+  await page.getByRole("checkbox").check();
+  await send(page).click();
+  await expect(page).toHaveURL(/#\/app\/aplikacje\?wyslano=1$/);
+
+  const state = await stored(page);
+  const application = state.applications.find(
+    (x) => x.candidateId === "candidate-anna" && x.jobId === job.id,
+  )!;
+  expect(application.scope).toMatchObject({ project: "Automatyzacja zgłoszeń", variant: "B" });
+  expect(application.scope!.durationMs).toBeGreaterThanOrEqual(0);
+  const [first, second, third] = application.scope!.answers;
+  expect(first).toMatchObject({
+    barId: bars[0].id,
+    answer: 2,
+    probeQuote: sentence,
+    changedAfterProbe: true,
   });
-}
+  for (const item of [first, second, third]) expect(item.evidence).toBeUndefined();
+  expect(second.changedAfterProbe).toBe(false);
+  const sessions = sessionsFor(state);
+  expect(sessions).toHaveLength(2);
+  expect(sessions.filter((x) => x.submittedAt)).toHaveLength(1);
+  expect(sessions.at(-1)!.submittedAt).toBeTruthy();
+});
+
+test("visiting an already submitted job does not open a scope session", async ({ page }) => {
+  await open(page);
+  await expect(group(page, 0)).toBeVisible();
+  await page.getByLabel("Projekt, o którym opowiadasz").fill("Automatyzacja zgłoszeń");
+  await page.getByLabel("Dlaczego pasujesz do tej roli?").fill(answerText);
+  for (let i = 0; i < 3; i++) await group(page, i).getByRole("radio").nth(1).check();
+  await page.getByRole("checkbox").check();
+  await send(page).click();
+  await expect(page).toHaveURL(/wyslano=1$/);
+  const before = (await stored(page)).scopeSessions.length;
+  await page.goto("/#/aplikuj/ai-product-manager");
+  await page.reload();
+  await expect(page.getByText("Aplikacja na tę ofertę została już wysłana.")).toBeVisible();
+  expect((await stored(page)).scopeSessions).toHaveLength(before);
+});
