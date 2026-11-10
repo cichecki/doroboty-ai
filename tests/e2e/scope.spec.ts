@@ -340,3 +340,26 @@ test("the candidate never sees the own tag or the multiplier score", async ({ pa
   await expect(page.locator(".record-meta")).toContainText("Match Score: 50%");
   await expect(page.locator(".scope-block")).toBeVisible();
 });
+
+test("employer sees the scope bars in the job editor and they follow the selected category", async ({
+  page,
+}) => {
+  const heading = "Kandydaci odpowiedzą, jak duża była ich rola w tych obszarach";
+  await page.goto("/");
+  await signIn(page, employerPerson.name);
+  await page.goto(`/#/app/oferty/${employerJob.id}`);
+  const panel = page.locator(".prototype-panel").filter({ hasText: heading });
+  await expect(panel.getByRole("heading", { name: heading, exact: true })).toBeVisible();
+  for (const bar of barsForCategory(employerJob.category))
+    await expect(panel.getByText(bar.title, { exact: true })).toBeVisible();
+
+  await page.getByRole("combobox", { name: "Kategoria", exact: true }).click();
+  await page.getByRole("option", { name: "Lead", exact: true }).click();
+  const leadBars = barsForCategory("lead");
+  expect(leadBars.map((bar) => bar.id)).toEqual(["L1", "L2", "L3"]);
+  for (const bar of leadBars)
+    await expect(panel.getByText(bar.title, { exact: true })).toBeVisible();
+  for (const bar of barsForCategory("build").filter((x) => !leadBars.includes(x)))
+    await expect(panel.getByText(bar.title, { exact: true })).toHaveCount(0);
+  await expect(panel.getByRole("button")).toHaveCount(0);
+});

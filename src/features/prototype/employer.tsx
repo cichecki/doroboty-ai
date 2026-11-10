@@ -12,7 +12,9 @@ import {
   seniorityLabels,
   contractLabels,
 } from "@/features/jobs/presentation";
+import type { JobCategory } from "@/features/jobs/types";
 import { currentPerson, jobSchema } from "./model";
+import { barsForCategory } from "./scope";
 import { usePrototype } from "./store";
 import { Field } from "./workspace";
 import { Empty, NotFound, PageTitle } from "./shell";
@@ -75,6 +77,7 @@ export function EmployerJobEditor() {
   const [summary, setSummary] = useState(existing?.summary ?? "");
   const [description, setDescription] = useState(existing?.description ?? "");
   const [source, setSource] = useState(existing?.sourceBrief ?? "");
+  const [category, setCategory] = useState<JobCategory>(existing?.category ?? "build");
   const [generated, setGenerated] = useState(existing?.generatedDescription ?? "");
   const [approved, setApproved] = useState(false);
   const [error, setError] = useState("");
@@ -218,10 +221,28 @@ export function EmployerJobEditor() {
             }}
           />
         </Field>
+        <div className="space-y-4">
+          <Field label="Kategoria">
+            <FormSelect
+              name="category"
+              ariaLabel="Kategoria"
+              value={category}
+              onValueChange={(next) => setCategory(next as JobCategory)}
+              options={Object.entries(categoryLabels).map(([value, label]) => ({ value, label }))}
+            />
+          </Field>
+          <section className="prototype-panel">
+            <h2 className="mb-4">Kandydaci odpowiedzą, jak duża była ich rola w tych obszarach</h2>
+            <ul className="space-y-2">
+              {barsForCategory(category).map((bar) => (
+                <li key={bar.id}>{bar.title}</li>
+              ))}
+            </ul>
+          </section>
+        </div>
         <div className="grid gap-4 sm:grid-cols-2">
           {(
             [
-              ["category", "Kategoria", categoryLabels, existing?.category ?? "build"],
               ["function", "Funkcja", functionLabels, existing?.function ?? "engineering"],
               ["remoteStatus", "Tryb pracy", remoteLabels, existing?.remoteStatus ?? "hybrid"],
               ["seniority", "Poziom", seniorityLabels, existing?.seniority ?? "mid"],
