@@ -48,4 +48,16 @@ describe("e2ResultsCsv", () => {
       '2026-11-10T10:00:00.000Z,paski,0,e2-01|e2-02|e2-03,2,"Ma ""własny"" kod, a to ważne,\nbo działa",4500',
     );
   });
+  it("writes an empty reason for results saved before the field existed", () => {
+    const legacy = {
+      at: "2026-11-10T10:00:00.000Z",
+      view: "obecny",
+      multiplier: false,
+      chosenIds: ["e2-01"],
+      hits: 1,
+      durationMs: 1000,
+    } as unknown as E2Result;
+    expect(e2ResultsCsv([legacy])).not.toContain("undefined");
+    expect(e2ResultsCsv([legacy])).toContain("e2-01,1,,1000");
+  });
 });

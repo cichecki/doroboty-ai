@@ -226,7 +226,7 @@ test("invalid import preserves state, valid import replaces state, reset asks fo
   await page.getByRole("button", { name: "Importuj", exact: true }).click();
   await expect(page.getByText("Zaimportowana Anna", { exact: true }).first()).toBeVisible();
   const download = page.waitForEvent("download");
-  await page.getByRole("button", { name: "Eksportuj dane" }).click();
+  await page.getByRole("button", { name: "Eksportuj dane", exact: true }).click();
   expect((await download).suggestedFilename()).toBe("doroboty-scenariusz.json");
   await page.getByRole("button", { name: "Resetuj scenariusz", exact: true }).click();
   await page.getByRole("button", { name: "Anuluj", exact: true }).click();
