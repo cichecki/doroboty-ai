@@ -1,6 +1,6 @@
 # Paski zakresu pracy w zgłoszeniu: specyfikacja prototypu
 
-Cykl: `tydzien-2-ponowny-zakup-v2` · 10.11.2026 · Status: **szkic do zatwierdzenia przez Kubę**
+Cykl: `tydzien-2-ponowny-zakup-v2` · 10.11.2026 · Status: **zaimplementowane w prototypie, do zatwierdzenia przez Kubę** (notatka: `scope-bars.md`)
 Podstawa: wynik E1 (`../e1-paski/wynik.md`), plan testów (`../05-experiments.md`: E3, E2, E6), rozmowy F1–F4 (`../affinity/`).
 
 ## Po co to jest
