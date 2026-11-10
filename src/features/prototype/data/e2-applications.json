@@ -1,0 +1,133 @@
+{
+  "jobTitle": "Specjalista ds. wdrożeń AI w zespole operacyjnym",
+  "category": "apply",
+  "note": "10 zanonimizowanych zgłoszeń z applications.csv (czerwiec 2026, Apply, wymagania podstawowe). Odpowiedzi na paskach z rubryki E1. outcome jest ukryty przed uczestnikiem.",
+  "applications": [
+    {
+      "id": "e2-01",
+      "candidateName": "Agnieszka Wróbel",
+      "submittedAt": "2026-06-18T21:39:52.000Z",
+      "score": 97,
+      "answer": "W dotychczasowych projektach rozwijałem umiejętności potrzebne do wdrożeń AI, w tym w obszarze: katalog produktów. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "answers": [2, 1, 1],
+      "evidence": [null, null, null],
+      "outcome": "rejected",
+      "sourceApplicationId": "app-038651"
+    },
+    {
+      "id": "e2-02",
+      "candidateName": "Tomasz Lis",
+      "submittedAt": "2026-06-23T04:50:37.000Z",
+      "score": 67,
+      "answer": "Chodzi o projekt z obszaru: katalog produktów. Pisałem instrukcje do prototypu. Decyzja o zmianie procesu i pomiar adopcji były po stronie managera. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "answers": [2, 1, 1],
+      "evidence": [null, null, null],
+      "outcome": "rejected",
+      "sourceApplicationId": "app-033331"
+    },
+    {
+      "id": "e2-03",
+      "candidateName": "Karolina Mazur",
+      "submittedAt": "2026-06-23T08:28:49.000Z",
+      "score": 90,
+      "answer": "W dotychczasowych projektach rozwijałem umiejętności potrzebne do wdrożeń AI, w tym w obszarze: obsługa zgłoszeń. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy. Zrobiłem demonstrację rozwiązania na własnych danych. Nie zostało włączone do pracy zespołu.",
+      "answers": [2, 1, 1],
+      "evidence": [null, null, null],
+      "outcome": "rejected",
+      "sourceApplicationId": "app-038642"
+    },
+    {
+      "id": "e2-04",
+      "candidateName": "Paweł Zając",
+      "submittedAt": "2026-06-24T18:52:56.000Z",
+      "score": 76,
+      "answer": "Łączę praktyczną znajomość rozwiązań AI z pracą zespołową i orientacją na wynik w obszarze: wiedza zespołu. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "answers": [4, 4, 3],
+      "evidence": [
+        "Odpowiadałem za przejście od prototypu do codziennej pracy.",
+        "Zbieraliśmy dane o adopcji i poprawialiśmy instrukcje.",
+        null
+      ],
+      "outcome": "rejected",
+      "sourceApplicationId": "app-037401"
+    },
+    {
+      "id": "e2-05",
+      "candidateName": "Magdalena Król",
+      "submittedAt": "2026-06-25T15:02:46.000Z",
+      "score": 80,
+      "answer": "Chodzi o projekt z obszaru: planowanie dostaw. Zmieniłem konkretny krok procesu z właścicielem operacji. Sprawdziliśmy czas pracy przed zmianą i po niej. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "answers": [4, 4, 2],
+      "evidence": [
+        "Zmieniłem konkretny krok procesu z właścicielem operacji.",
+        "Sprawdziliśmy czas pracy przed zmianą i po niej.",
+        null
+      ],
+      "outcome": "continued",
+      "sourceApplicationId": "app-035607"
+    },
+    {
+      "id": "e2-06",
+      "candidateName": "Michał Pawlak",
+      "submittedAt": "2026-06-27T03:03:14.000Z",
+      "score": 77,
+      "answer": "W dotychczasowych projektach rozwijałem umiejętności potrzebne do wdrożeń AI, w tym w obszarze: obsługa zgłoszeń. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy.",
+      "answers": [4, 4, 2],
+      "evidence": [
+        "Zmieniłem konkretny krok procesu z właścicielem operacji.",
+        "Sprawdziliśmy czas pracy przed zmianą i po niej.",
+        null
+      ],
+      "outcome": "continued",
+      "sourceApplicationId": "app-036900"
+    },
+    {
+      "id": "e2-07",
+      "candidateName": "Joanna Sikora",
+      "submittedAt": "2026-06-28T07:49:25.000Z",
+      "score": 92,
+      "answer": "Moje doświadczenie w projektach AI odpowiada zadaniom opisanym w ogłoszeniu dla obszaru: dokumenty operacyjne. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy. Pisałem instrukcje do prototypu. Decyzja o zmianie procesu i pomiar adopcji były po stronie managera.",
+      "answers": [2, 1, 1],
+      "evidence": [null, null, null],
+      "outcome": "rejected",
+      "sourceApplicationId": "app-038254"
+    },
+    {
+      "id": "e2-08",
+      "candidateName": "Krzysztof Baran",
+      "submittedAt": "2026-06-29T00:21:43.000Z",
+      "score": 54,
+      "answer": "Chodzi o projekt z obszaru: dokumenty operacyjne. Uczestniczyłem w warsztatach i tworzyłem przykładowe prompty. Nie sprawdzaliśmy późniejszego użycia. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "answers": [1, 1, 1],
+      "evidence": [null, null, null],
+      "outcome": "rejected",
+      "sourceApplicationId": "app-033043"
+    },
+    {
+      "id": "e2-09",
+      "candidateName": "Natalia Duda",
+      "submittedAt": "2026-06-30T00:37:07.000Z",
+      "score": 61,
+      "answer": "Chodzi o projekt z obszaru: kontrola dokumentacji. Odpowiadałem za przejście od prototypu do codziennej pracy. Zbieraliśmy dane o adopcji i poprawialiśmy instrukcje. Mogę omówić przykład i rolę pozostałych osób. Chcę znać pierwszy projekt oraz dostęp do danych. Zakres wdrożenia był szerszy niż moja praca. Materiały i termin rozpoczęcia musimy uzgodnić.",
+      "answers": [4, 4, 3],
+      "evidence": [
+        "Odpowiadałem za przejście od prototypu do codziennej pracy.",
+        "Zbieraliśmy dane o adopcji i poprawialiśmy instrukcje.",
+        null
+      ],
+      "outcome": "continued",
+      "sourceApplicationId": "app-034467"
+    },
+    {
+      "id": "e2-10",
+      "candidateName": "Rafał Szulc",
+      "submittedAt": "2026-06-30T02:41:48.000Z",
+      "score": 80,
+      "answer": "W dotychczasowych projektach rozwijałem umiejętności potrzebne do wdrożeń AI, w tym w obszarze: katalog produktów. Uczestniczyłem w przygotowaniu i doskonaleniu rozwiązania, uwzględniając potrzeby użytkowników oraz ograniczenia danych. Potrafię współpracować z osobami technicznymi i biznesowymi, porządkować zadania i omawiać kolejne kroki. Znam znaczenie sprawdzania efektów i odpowiedzialności za uzgodniony zakres. Chętnie przedstawię konkretny przykład oraz sposób pracy zespołu. Interesuje mnie możliwość dalszego rozwoju i pracy przy wdrożeniu odpowiadającym rzeczywistym potrzebom organizacji. Warunki rozpoczęcia współpracy oraz dostępność materiałów projektowych chciałbym uzgodnić podczas rozmowy. Zrobiłem demonstrację rozwiązania na własnych danych. Nie zostało włączone do pracy zespołu.",
+      "answers": [2, 1, 1],
+      "evidence": [null, null, null],
+      "outcome": "continued",
+      "sourceApplicationId": "app-035633"
+    }
+  ]
+}
