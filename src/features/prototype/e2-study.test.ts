@@ -39,10 +39,13 @@ describe("e2ResultsCsv", () => {
       multiplier: false,
       chosenIds: ["e2-01", "e2-02", "e2-03"],
       hits: 2,
+      reason: 'Ma "własny" kod, a to ważne,\nbo działa',
       durationMs: 4500,
     };
-    const lines = e2ResultsCsv([result]).trim().split("\n");
-    expect(lines[0]).toBe("at,view,multiplier,chosen_ids,hits,duration_ms");
-    expect(lines[1]).toBe("2026-11-10T10:00:00.000Z,paski,0,e2-01|e2-02|e2-03,2,4500");
+    const csv = e2ResultsCsv([result]);
+    expect(csv.split("\n")[0]).toBe("at,view,multiplier,chosen_ids,hits,reason,duration_ms");
+    expect(csv).toContain(
+      '2026-11-10T10:00:00.000Z,paski,0,e2-01|e2-02|e2-03,2,"Ma ""własny"" kod, a to ważne,\nbo działa",4500',
+    );
   });
 });

@@ -475,7 +475,13 @@
   margin-top: 16px;
 }
 @media (max-width: 480px) {
-  .e2-study h1 {
+  .e2-study.pp-container h1 {
     font-size: clamp(1.25rem, 6.4vw, 1.7rem);
+  }
+}
+@media (max-width: 480px) {
+  .e2-study .app-card .ccard__name {
+    font-size: 1.05rem;
+    overflow-wrap: normal;
   }
 }

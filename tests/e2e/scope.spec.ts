@@ -384,6 +384,7 @@ test("E2 study page: current view has no scope block, bars view does, picks are 
   await expect(page.getByText(/Sam: \d z 3 obszarów/)).toHaveCount(10);
 
   const boxes = page.getByRole("checkbox", { name: "Zaproś na rozmowę" });
+  await page.getByLabel("Dlaczego ci kandydaci?").fill("Bo samodzielnie, bez zespołu");
   await boxes.nth(0).click();
   await boxes.nth(1).click();
   await boxes.nth(2).click();
@@ -397,6 +398,7 @@ test("E2 study page: current view has no scope block, bars view does, picks are 
   );
   expect(saved).toHaveLength(1);
   expect(saved[0].chosenIds).toHaveLength(3);
+  expect(saved[0].reason).toBe("Bo samodzielnie, bez zespołu");
   await page.getByRole("button", { name: "Zacznij od nowa", exact: true }).click();
   await expect(boxes.nth(0)).not.toBeChecked();
 });

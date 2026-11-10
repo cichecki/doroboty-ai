@@ -27,6 +27,7 @@ export type E2Result = {
   multiplier: boolean;
   chosenIds: string[];
   hits: number;
+  reason: string;
   durationMs: number;
 };
 
@@ -41,11 +42,18 @@ export function e2Order(view: E2View, multiplier: boolean): E2Application[] {
   return list.sort(multiplier ? compareByMultiplier : compareByScope);
 }
 
-const CSV_HEADER = "at,view,multiplier,chosen_ids,hits,duration_ms";
+const CSV_HEADER = "at,view,multiplier,chosen_ids,hits,reason,duration_ms";
+
+function csvCell(value: string | number): string {
+  const text = String(value);
+  return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+}
 
 export function e2ResultsCsv(results: E2Result[]): string {
   const rows = results.map((r) =>
-    [r.at, r.view, r.multiplier ? 1 : 0, r.chosenIds.join("|"), r.hits, r.durationMs].join(","),
+    [r.at, r.view, r.multiplier ? 1 : 0, r.chosenIds.join("|"), r.hits, r.reason, r.durationMs]
+      .map(csvCell)
+      .join(","),
   );
   return [CSV_HEADER, ...rows].join("\n") + "\n";
 }
@@ -111,6 +119,7 @@ export function E2StudyPage() {
       multiplier,
       chosenIds: picked,
       hits,
+      reason: why.trim(),
       durationMs: Date.now() - startedAt.current,
     });
     setDone(true);
