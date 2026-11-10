@@ -329,8 +329,10 @@ export function findVagueSentence(text: string, bar: ScopeBar): string | null {
   for (const raw of sentences) {
     const sentence = raw.trim();
     if (sentence === "") continue;
-    const lower = sentence.toLocaleLowerCase("pl");
-    if (bar.vaguePhrases.some((phrase) => lower.includes(phrase))) {
+    const normalized = sentence
+      .toLocaleLowerCase("pl")
+      .replace(/ł(?:am|em|aś|eś|yśmy|iśmy)(?=[\s.,;:!?)]|$)/g, "ł");
+    if (bar.vaguePhrases.some((phrase) => normalized.includes(phrase))) {
       return capSentence(sentence);
     }
   }

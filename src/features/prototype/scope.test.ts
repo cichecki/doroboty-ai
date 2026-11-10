@@ -87,6 +87,16 @@ describe("wykrywanie ogólników", () => {
     expect(findVagueSentence("Wdrażałam rozwiązanie w organizacji.", a1)).not.toBeNull();
     expect(findVagueSentence("Koordynowałam zespół.", barById("L1")!)).not.toBeNull();
   });
+  it.each([
+    ["Odpowiadałam za wdrożenie.", "B1"],
+    ["Prowadziłam projekt pilotażowy.", "A1"],
+    ["Zmieniałam proces obsługi.", "A1"],
+    ["Ustalałam kierunek prac.", "L1"],
+    ["Dbałam o jakość odpowiedzi.", "B2"],
+    ["Odpowiadałem za budżet.", "L2"],
+  ])("łapie formy żeńskie i pierwszej osoby wieloczłonowych fraz: %s", (sentence, barId) => {
+    expect(findVagueSentence(sentence, barById(barId)!)).toBe(sentence);
+  });
   it("zwraca null bez frazy i dla pustego tekstu", () => {
     expect(findVagueSentence("Napisałem moduł wyszukiwania.", a1)).toBeNull();
     expect(findVagueSentence("   ", a1)).toBeNull();
