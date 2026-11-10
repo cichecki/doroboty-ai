@@ -7,6 +7,7 @@ import {
   multiplierScore,
 } from "../../src/features/prototype/scope";
 
+const e2Jobs = { jobTitle: "Specjalista ds. wdrożeń AI w zespole operacyjnym" };
 const job = initialState().jobs.find((item) => item.slug === "ai-product-manager")!;
 const bars = barsForCategory(job.category);
 const answerText =
@@ -362,4 +363,40 @@ test("employer sees the scope bars in the job editor and they follow the selecte
   for (const bar of barsForCategory("build").filter((x) => !leadBars.includes(x)))
     await expect(panel.getByText(bar.title, { exact: true })).toHaveCount(0);
   await expect(panel.getByRole("button")).toHaveCount(0);
+});
+
+test("E2 study page: current view has no scope block, bars view does, picks are capped at 3", async ({
+  page,
+}) => {
+  const task = "Masz czas na 3 rozmowy w tym tygodniu. Kogo zapraszasz i dlaczego?";
+  await page.goto("/#/badanie/e2");
+  await expect(page.getByRole("heading", { name: e2Jobs.jobTitle, level: 1 })).toBeVisible();
+  await expect(page.getByText(task)).toBeVisible();
+  const cardList = page.locator("article.app-card");
+  await expect(cardList).toHaveCount(10);
+  await expect(page.getByText(/Match Score: \d+%/)).toHaveCount(10);
+  await expect(page.getByText("Rola w projekcie")).toHaveCount(0);
+  await expect(page.getByText(/Sam: \d z 3 obszarów/)).toHaveCount(0);
+
+  await page.goto("/#/badanie/e2?widok=paski");
+  await expect(cardList).toHaveCount(10);
+  await expect(page.locator(".scope-block")).toHaveCount(10);
+  await expect(page.getByText(/Sam: \d z 3 obszarów/)).toHaveCount(10);
+
+  const boxes = page.getByRole("checkbox", { name: "Zaproś na rozmowę" });
+  await boxes.nth(0).click();
+  await boxes.nth(1).click();
+  await boxes.nth(2).click();
+  await expect(boxes.nth(3)).toBeDisabled();
+  const confirm = page.getByRole("button", { name: "Zatwierdź wybór", exact: true });
+  await confirm.click();
+  await expect(page.getByText("Dziękujemy, wybór zapisany.")).toBeVisible();
+  await expect(page.getByText(/continued|rejected|wynik rozmowy/i)).toHaveCount(0);
+  const saved = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem("doroboty.e2.results") ?? "[]"),
+  );
+  expect(saved).toHaveLength(1);
+  expect(saved[0].chosenIds).toHaveLength(3);
+  await page.getByRole("button", { name: "Zacznij od nowa", exact: true }).click();
+  await expect(boxes.nth(0)).not.toBeChecked();
 });

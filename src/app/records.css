@@ -409,3 +409,73 @@
 .app-card__scope[open] summary {
   margin-bottom: 10px;
 }
+
+/* E2 study view */
+.e2-study {
+  padding-block: 40px 64px;
+}
+.e2-study__task {
+  max-width: 60ch;
+}
+.e2-study__views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: baseline;
+  margin-top: 16px;
+  font-size: 13px;
+}
+.e2-study__views-label {
+  color: var(--gui-text-muted);
+}
+.e2-study__views a {
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.e2-study__views a[aria-current="page"] {
+  font-weight: 700;
+  text-decoration-color: var(--red);
+  text-decoration-thickness: 3px;
+}
+.e2-card__answer {
+  margin: 16px 0 0;
+  overflow-wrap: anywhere;
+}
+.e2-card__more summary {
+  margin-top: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.e2-card__pick {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  font-weight: 700;
+}
+.e2-study__why {
+  margin-top: 40px;
+}
+.e2-study__count {
+  margin: 16px 0;
+}
+.e2-study__thanks {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  margin-top: 32px;
+  font-size: 20px;
+  font-weight: 700;
+}
+.e2-study__export {
+  margin-top: 48px;
+}
+.e2-study .scope-block {
+  margin-top: 16px;
+}
+@media (max-width: 480px) {
+  .e2-study h1 {
+    font-size: clamp(1.25rem, 6.4vw, 1.7rem);
+  }
+}
