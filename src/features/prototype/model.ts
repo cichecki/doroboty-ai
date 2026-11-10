@@ -2,6 +2,7 @@ import { z } from "zod";
 import marketplace from "./data/marketplace.json" with { type: "json" };
 import people from "./data/people.json" with { type: "json" };
 import type { JobWithCompany } from "@/features/jobs/types";
+import { barsForCategory, evidenceRequired, MIN_EVIDENCE_LENGTH } from "./scope";
 
 const id = z
   .string()
@@ -104,6 +105,32 @@ export const nextStages: Record<Stage, Stage[]> = {
   withdrawn: [],
   hired: [],
 };
+const scopeAnswerSchema = z.object({
+  barId: id,
+  answer: z.number().int().min(1).max(4),
+  evidence: text.max(600).optional(),
+  probeQuote: text.max(600).optional(),
+  changedAfterProbe: z.boolean(),
+});
+const scopeSchema = z.object({
+  project: shortText,
+  variant: z.enum(["A", "B"]),
+  answers: z.array(scopeAnswerSchema).length(3),
+  durationMs: z.number().int().nonnegative(),
+});
+export type ScopeAnswerInput = {
+  barId: string;
+  answer: 1 | 2 | 3 | 4;
+  evidence?: string;
+  probeQuote?: string;
+  changedAfterProbe: boolean;
+};
+export type ApplicationScope = {
+  project: string;
+  variant: "A" | "B";
+  answers: ScopeAnswerInput[];
+  durationMs: number;
+};
 const applicationSchema = z.object({
   id,
   candidateId: id,
@@ -122,6 +149,7 @@ const applicationSchema = z.object({
     .array(z.object({ stage: z.enum(stages), at: z.iso.datetime(), note: text }))
     .min(1)
     .max(30),
+  scope: scopeSchema.optional(),
 });
 const draftSchema = z.object({
   candidateId: id,
@@ -140,6 +168,21 @@ export const stateSchema = z
     applications: z.array(applicationSchema).max(2000),
     saved: z.array(z.object({ candidateId: id, jobId: id })).max(5000),
     drafts: z.array(draftSchema).max(1000),
+    experiment: z
+      .object({ formVariant: z.enum(["A", "B"]), multiplier: z.boolean() })
+      .default({ formVariant: "B", multiplier: false }),
+    scopeSessions: z
+      .array(
+        z.object({
+          candidateId: id,
+          jobId: id,
+          variant: z.enum(["A", "B"]),
+          openedAt: z.iso.datetime(),
+          submittedAt: z.iso.datetime().optional(),
+        }),
+      )
+      .max(5000)
+      .default([]),
   })
   .superRefine((s, ctx) => {
     const problem = (message: string) => ctx.addIssue({ code: "custom", message });
@@ -209,7 +252,10 @@ export type Action =
       generated: string;
       answer: string;
       consent: boolean;
+      scope?: { project: string; answers: ScopeAnswerInput[]; durationMs: number };
     }
+  | { type: "experiment"; formVariant: "A" | "B"; multiplier: boolean }
+  | { type: "scope_open"; jobId: string }
   | { type: "stage"; applicationId: string; stage: Stage; note: string }
   | { type: "withdraw"; applicationId: string }
   | { type: "publish"; job: z.infer<typeof jobSchema> }
@@ -224,6 +270,8 @@ export function initialState(): State {
     applications: [],
     saved: [],
     drafts: [],
+    experiment: { formVariant: "B", multiplier: false },
+    scopeSessions: [],
   });
   const bob = state.people.find((x) => x.id === "candidate-marek")!;
   const job = state.jobs[0];
@@ -243,6 +291,21 @@ export function initialState(): State {
     summary: bob.exampleSummary,
     stage: "submitted",
     events: [{ stage: "submitted", at: "2026-11-02T09:00:00.000Z", note: "" }],
+    scope: {
+      project: "Automatyzacja obsługi zgłoszeń",
+      variant: "B",
+      answers: barsForCategory(job.category).map((bar, i) => ({
+        barId: bar.id,
+        answer: ([3, 2, 1] as const)[i],
+        ...(i === 0
+          ? {
+              evidence: "Zaproponowałem kolejność wdrożenia i uzgodniłem ją ze sponsorem projektu.",
+            }
+          : {}),
+        changedAfterProbe: false,
+      })),
+      durationMs: 240000,
+    },
   });
   return stateSchema.parse(state);
 }
@@ -298,6 +361,26 @@ export function transition(
     if (!action.consent) fail("Zatwierdź treść i zgodę na przesłanie aplikacji.");
     if (s.applications.some((x) => x.candidateId === p.id && x.jobId === job.id))
       fail("Aplikacja na tę ofertę została już wysłana.");
+    let scope: ApplicationScope | undefined;
+    if (action.scope) {
+      const variant = s.experiment.formVariant;
+      const bars = barsForCategory(job.category);
+      const answers = action.scope.answers;
+      const invalid = () => fail("Uzupełnij odpowiedzi o swojej roli w projekcie.");
+      if (answers.length !== bars.length || answers.some((a, i) => a.barId !== bars[i].id))
+        invalid();
+      scope = {
+        project: action.scope.project,
+        durationMs: action.scope.durationMs,
+        variant,
+        answers: answers.map((a) => {
+          const { evidence, ...rest } = a;
+          if (!evidenceRequired(variant, a.answer)) return rest;
+          if ((evidence ?? "").trim().length < MIN_EVIDENCE_LENGTH) invalid();
+          return { ...rest, evidence };
+        }),
+      };
+    }
     s.applications.push(
       applicationSchema.parse({
         id: newId,
@@ -314,9 +397,27 @@ export function transition(
         summary: p.exampleSummary,
         stage: "submitted",
         events: [{ stage: "submitted", at: now, note: "" }],
+        scope,
       }),
     );
+    const open = s.scopeSessions.filter(
+      (x) => x.candidateId === p.id && x.jobId === job.id && !x.submittedAt,
+    );
+    const last = open.at(-1);
+    if (last) last.submittedAt = now;
     s.drafts = s.drafts.filter((x) => !(x.candidateId === p.id && x.jobId === job.id));
+  } else if (action.type === "experiment") {
+    s.experiment = { formVariant: action.formVariant, multiplier: action.multiplier };
+  } else if (action.type === "scope_open") {
+    const p = candidate();
+    const job = s.jobs.find((x) => x.id === action.jobId && x.publicationStatus === "published");
+    if (!job) return fail("Oferta nie jest dostępna.");
+    s.scopeSessions.push({
+      candidateId: p.id,
+      jobId: job.id,
+      variant: s.experiment.formVariant,
+      openedAt: now,
+    });
   } else if (action.type === "stage" || action.type === "withdraw") {
     const application = s.applications.find((x) => x.id === action.applicationId);
     if (!application) return fail("Nie znaleziono aplikacji.");

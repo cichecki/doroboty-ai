@@ -68,4 +68,14 @@ describe("browser persistence and recovery", () => {
       expect(parseState(JSON.stringify({ ...state, theme }))).toEqual(state);
     }
   });
+  it("loads an old save without scope fields using defaults", () => {
+    const old: Record<string, unknown> = JSON.parse(JSON.stringify(initialState()));
+    delete old.experiment;
+    delete old.scopeSessions;
+    for (const a of old.applications as Record<string, unknown>[]) delete a.scope;
+    const parsed = parseState(JSON.stringify(old));
+    expect(parsed.experiment).toEqual({ formVariant: "B", multiplier: false });
+    expect(parsed.scopeSessions).toEqual([]);
+    expect(parsed.applications[0].scope).toBeUndefined();
+  });
 });
