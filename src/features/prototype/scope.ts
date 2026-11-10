@@ -41,12 +41,12 @@ export const SCOPE_BARS: readonly ScopeBar[] = [
       },
     ],
     vaguePhrases: [
-      "budowałem",
-      "tworzyłem rozwiązanie",
-      "odpowiadałem za",
-      "byłem zaangażowany",
-      "uczestniczyłem",
-      "rozwijałem",
+      "budował",
+      "tworzył rozwiązanie",
+      "odpowiadał za",
+      "zaangażowan",
+      "uczestniczył",
+      "rozwijał",
     ],
   },
   {
@@ -73,13 +73,7 @@ export const SCOPE_BARS: readonly ScopeBar[] = [
         recruiter: "Sam prowadził ewaluację",
       },
     ],
-    vaguePhrases: [
-      "dbałem o jakość",
-      "testowałem",
-      "sprawdzałem",
-      "weryfikowałem",
-      "sprawdzania efektów",
-    ],
+    vaguePhrases: ["dbał o jakość", "testował", "sprawdzał", "weryfikował", "sprawdzania efektów"],
   },
   {
     id: "B3",
@@ -107,7 +101,7 @@ export const SCOPE_BARS: readonly ScopeBar[] = [
         recruiter: "Sam utrzymywał",
       },
     ],
-    vaguePhrases: ["utrzymywałem", "wspierałem", "odpowiadałem za działanie", "po wdrożeniu"],
+    vaguePhrases: ["utrzymywał", "wspierał", "odpowiadał za działanie", "po wdrożeniu"],
   },
   {
     id: "A1",
@@ -136,12 +130,12 @@ export const SCOPE_BARS: readonly ScopeBar[] = [
       },
     ],
     vaguePhrases: [
-      "wdrażałem",
+      "wdrażał",
       "w organizacji",
       "w dwóch działach",
-      "prowadziłem projekt",
-      "uczestniczyłem",
-      "zmieniałem proces",
+      "prowadził projekt",
+      "uczestniczył",
+      "zmieniał proces",
     ],
   },
   {
@@ -168,7 +162,7 @@ export const SCOPE_BARS: readonly ScopeBar[] = [
         recruiter: "Sam mierzył i poprawiał",
       },
     ],
-    vaguePhrases: ["mierzyłem", "sprawdzania efektów", "efekty", "wyniki", "adopcj"],
+    vaguePhrases: ["mierzył", "sprawdzania efektów", "efekty", "wyniki", "adopcj"],
   },
   {
     id: "A3",
@@ -198,7 +192,7 @@ export const SCOPE_BARS: readonly ScopeBar[] = [
     vaguePhrases: [
       "potrzeby użytkowników",
       "z użytkownikami",
-      "szkoliłem",
+      "szkolił",
       "współpracować z osobami",
     ],
   },
@@ -228,7 +222,7 @@ export const SCOPE_BARS: readonly ScopeBar[] = [
         recruiter: "Sam ustalał priorytety",
       },
     ],
-    vaguePhrases: ["koordynowałem", "priorytet", "ustalałem kierunek", "prowadziłem projekt"],
+    vaguePhrases: ["koordynował", "priorytet", "ustalał kierunek", "prowadził projekt"],
   },
   {
     id: "L2",
@@ -254,7 +248,7 @@ export const SCOPE_BARS: readonly ScopeBar[] = [
         recruiter: "Sam decydował o zakresie",
       },
     ],
-    vaguePhrases: ["budżet", "uzgodniony zakres", "decydowałem", "odpowiadałem za"],
+    vaguePhrases: ["budżet", "uzgodniony zakres", "decydował", "odpowiadał za"],
   },
   {
     id: "L3",
@@ -281,7 +275,7 @@ export const SCOPE_BARS: readonly ScopeBar[] = [
         recruiter: "Sam ustalił kryteria",
       },
     ],
-    vaguePhrases: ["kryteri", "decyzj", "byłem zaangażowany"],
+    vaguePhrases: ["kryteri", "decyzj", "zaangażowan"],
   },
 ];
 
@@ -320,15 +314,24 @@ export function evidenceRequired(variant: FormVariant, answer: number | undefine
   return variant === "B" && answer !== undefined && answer >= 3;
 }
 
-/** Zwraca pierwsze zdanie tekstu zawierające frazę ogólnika z paska (bez względu na wielkość liter). */
+export const MAX_VAGUE_SENTENCE = 240;
+
+function capSentence(sentence: string): string {
+  if (sentence.length <= MAX_VAGUE_SENTENCE) return sentence;
+  const cut = sentence.slice(0, MAX_VAGUE_SENTENCE);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > 0 ? cut.slice(0, space) : cut).trimEnd()}…`;
+}
+
+/** Zwraca pierwsze zdanie (podział po .!? i na nowych liniach, max 240 znaków) zawierające frazę ogólnika z paska (bez względu na wielkość liter). */
 export function findVagueSentence(text: string, bar: ScopeBar): string | null {
-  const sentences = text.split(/(?<=[.!?])\s+/);
+  const sentences = text.split(/(?<=[.!?])\s+|\r?\n+/);
   for (const raw of sentences) {
     const sentence = raw.trim();
     if (sentence === "") continue;
     const lower = sentence.toLocaleLowerCase("pl");
     if (bar.vaguePhrases.some((phrase) => lower.includes(phrase))) {
-      return sentence;
+      return capSentence(sentence);
     }
   }
   return null;

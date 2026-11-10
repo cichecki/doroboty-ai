@@ -646,7 +646,7 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
                     <span className="stage-dot" aria-hidden="true" />
                     <span>{stageLabels[a.stage]}</span>
                   </p>
-                  {employer && (
+                  {employer && a.scope && (
                     <p className="app-card__own">
                       <OwnTag answers={rankable(a).answers} />
                     </p>

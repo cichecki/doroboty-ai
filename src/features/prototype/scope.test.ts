@@ -72,6 +72,21 @@ describe("wykrywanie ogólników", () => {
       "wdrażałem rozwiązanie w organizacji",
     );
   });
+  it("dzieli tekst także po nowych liniach", () => {
+    const text = "Lubię dane\nWdrażałem rozwiązanie w organizacji\nCoś jeszcze";
+    expect(findVagueSentence(text, a1)).toBe("Wdrażałem rozwiązanie w organizacji");
+  });
+  it("skraca bardzo długie zdanie do 240 znaków i dodaje wielokropek", () => {
+    const text = `wdrażałem ${"rozwiązanie ".repeat(60)}`;
+    const result = findVagueSentence(text, a1)!;
+    expect(text.trim().length).toBeGreaterThan(600);
+    expect(result.length).toBeLessThanOrEqual(241);
+    expect(result.endsWith("…")).toBe(true);
+  });
+  it("łapie formy żeńskie", () => {
+    expect(findVagueSentence("Wdrażałam rozwiązanie w organizacji.", a1)).not.toBeNull();
+    expect(findVagueSentence("Koordynowałam zespół.", barById("L1")!)).not.toBeNull();
+  });
   it("zwraca null bez frazy i dla pustego tekstu", () => {
     expect(findVagueSentence("Napisałem moduł wyszukiwania.", a1)).toBeNull();
     expect(findVagueSentence("   ", a1)).toBeNull();

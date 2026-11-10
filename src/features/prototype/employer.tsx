@@ -232,7 +232,7 @@ export function EmployerJobEditor() {
             />
           </Field>
           <section className="prototype-panel">
-            <h2 className="mb-4">Kandydaci odpowiedzą, jak duża była ich rola w tych obszarach</h2>
+            <h3 className="mb-4">Kandydaci odpowiedzą, jak duża była ich rola w tych obszarach</h3>
             <ul className="space-y-2">
               {barsForCategory(category).map((bar) => (
                 <li key={bar.id}>{bar.title}</li>
