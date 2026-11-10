@@ -4,6 +4,7 @@ import { ProcessTimeline } from "@/components/process-timeline";
 import { RecordSheet } from "@/components/record-sheet";
 import { CvAttachment } from "./cv-attachment";
 import { MatchScore } from "./match-score";
+import { ScopeBlock } from "./scope-block";
 import { stageLabels, type Application, type Stage } from "./model";
 
 type RecordEvent = { stage: Stage; at: string; note?: string };
@@ -18,6 +19,7 @@ export function ApplicationRecord({
   companyName,
   audience,
   history,
+  displayScore,
   statusRef,
   children,
   footer,
@@ -25,10 +27,13 @@ export function ApplicationRecord({
   application: Pick<
     Application,
     "candidateId" | "candidateName" | "jobTitle" | "stage" | "answer" | "cv" | "score" | "summary"
-  >;
+  > &
+    Partial<Pick<Application, "scope">>;
   companyName: string;
   audience: "candidate" | "employer";
   history: RecordEvent[];
+  /** Recruiter-only score override (multiplier experiment); candidates never get it. */
+  displayScore?: number;
   statusRef?: Ref<HTMLSpanElement>;
   children?: ReactNode;
   footer?: ReactNode;
@@ -55,7 +60,7 @@ export function ApplicationRecord({
           <span className="record-stage" tabIndex={-1} ref={statusRef}>
             {stageLabels[application.stage]}
           </span>
-          <MatchScore score={application.score} />
+          <MatchScore score={displayScore ?? application.score} />
           {submitted && (
             <span>
               Złożona:{" "}
@@ -75,6 +80,12 @@ export function ApplicationRecord({
                 <>
                   <h3>Przesłana aplikacja</h3>
                   <p>{application.answer}</p>
+                  {application.scope && (
+                    <ScopeBlock
+                      answers={application.scope.answers}
+                      subtitle={`Projekt: ${application.scope.project}`}
+                    />
+                  )}
                 </>
               ),
             },

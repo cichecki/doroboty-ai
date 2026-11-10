@@ -388,3 +388,24 @@
   font-size: 13px;
   font-weight: 700;
 }
+.scope-block__subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--gui-text-muted);
+}
+.app-card__own {
+  margin: 4px 0 0;
+}
+.app-card__scope {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.app-card__scope summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+}
+.app-card__scope[open] summary {
+  margin-bottom: 10px;
+}

@@ -9,9 +9,12 @@ export function OwnTag({ answers }: { answers: readonly number[] }) {
 export function ScopeBlock({
   answers,
   heading = "Rola w projekcie",
+  subtitle,
 }: {
   answers: BlockAnswer[];
-  heading?: string;
+  /** Pass null when a surrounding element (e.g. a summary) already names the block. */
+  heading?: string | null;
+  subtitle?: string;
 }) {
   const rows = answers.flatMap((item) => {
     const bar = barById(item.barId);
@@ -20,7 +23,8 @@ export function ScopeBlock({
   });
   return (
     <div className="scope-block">
-      <h4 className="scope-block__heading">{heading}</h4>
+      {heading !== null && <h4 className="scope-block__heading">{heading}</h4>}
+      {subtitle ? <p className="scope-block__subtitle">{subtitle}</p> : null}
       {rows.length ? (
         <dl className="scope-block__rows">
           {rows.map(({ bar, option, evidence }) => (

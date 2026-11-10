@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ApplicationRecord } from "./application-record";
 import { nextStages, stageLabels, type Application } from "./model";
+import { multiplierScore, ownCount } from "./scope";
 import { usePrototype } from "./store";
 
 export function RecruitingApplication({ application }: { application: Application }) {
@@ -27,6 +28,14 @@ export function RecruitingApplication({ application }: { application: Applicatio
         application={application}
         companyName={company?.name ?? ""}
         audience="employer"
+        displayScore={
+          state.experiment.multiplier
+            ? multiplierScore(
+                application.score,
+                ownCount(application.scope?.answers.map((x) => x.answer) ?? []),
+              )
+            : undefined
+        }
         history={application.events}
         statusRef={statusRef}
         footer={

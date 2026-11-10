@@ -19,8 +19,16 @@ import { MatchScore } from "./match-score";
 import { RecruitingApplication } from "./recruiting-application";
 import { CandidateApplication } from "./candidate-application";
 import { ScopeQuestions, scopeProblems, type ScopeDraft } from "./scope-questions";
-import { ScopeBlock } from "./scope-block";
-import { barsForCategory, evidenceRequired, findVagueSentence } from "./scope";
+import { OwnTag, ScopeBlock } from "./scope-block";
+import {
+  barsForCategory,
+  compareByMultiplier,
+  compareByScope,
+  evidenceRequired,
+  findVagueSentence,
+  multiplierScore,
+  ownCount,
+} from "./scope";
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -568,13 +576,25 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
   const person = currentPerson(state)!;
   const [query, setQuery] = useState("");
   const [params] = useSearchParams();
-  const applications = state.applications.filter(
-    (x) =>
-      (employer ? x.companyId === person.companyId : x.candidateId === person.id) &&
-      `${x.candidateName} ${x.jobTitle}`
-        .toLocaleLowerCase("pl")
-        .includes(query.toLocaleLowerCase("pl")),
-  );
+  const multiplier = employer && state.experiment.multiplier;
+  const rankable = (x: (typeof state.applications)[number]) => ({
+    answers: x.scope?.answers.map((a) => a.answer) ?? [],
+    submittedAt: x.events[0]?.at ?? "",
+    score: x.score,
+  });
+  const applications = state.applications
+    .filter(
+      (x) =>
+        (employer ? x.companyId === person.companyId : x.candidateId === person.id) &&
+        `${x.candidateName} ${x.jobTitle}`
+          .toLocaleLowerCase("pl")
+          .includes(query.toLocaleLowerCase("pl")),
+    )
+    .sort(
+      employer
+        ? (a, b) => (multiplier ? compareByMultiplier : compareByScope)(rankable(a), rankable(b))
+        : () => 0,
+    );
   return (
     <>
       <PageTitle>{employer ? "Kandydaci" : "Moje aplikacje"}</PageTitle>
@@ -597,7 +617,11 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
               className="ccard app-card"
               aria-labelledby={`application-${a.id}`}
             >
-              <MatchScore score={a.score} />
+              <MatchScore
+                score={
+                  multiplier ? multiplierScore(a.score, ownCount(rankable(a).answers)) : a.score
+                }
+              />
               <div className="ccard__head">
                 {employer && (
                   <Portrait
@@ -622,9 +646,24 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
                     <span className="stage-dot" aria-hidden="true" />
                     <span>{stageLabels[a.stage]}</span>
                   </p>
+                  {employer && (
+                    <p className="app-card__own">
+                      <OwnTag answers={rankable(a).answers} />
+                    </p>
+                  )}
                 </div>
               </div>
               {employer && <p className="app-card__summary">{a.summary}</p>}
+              {employer && a.scope && (
+                <details className="app-card__scope">
+                  <summary>Rola w projekcie</summary>
+                  <ScopeBlock
+                    answers={a.scope.answers}
+                    heading={null}
+                    subtitle={`Projekt: ${a.scope.project}`}
+                  />
+                </details>
+              )}
             </Frame>
           ))
         ) : (
