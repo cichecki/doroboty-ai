@@ -272,7 +272,9 @@ test("map, hash deep links and unknown records work without external requests", 
   await page.goto("/#/oferty/missing");
   await expect(page.getByRole("heading", { name: "Nie znaleziono strony" })).toBeVisible();
 });
-test("mobile navigation, light-only appearance and keyboard person selection", async ({ page }) => {
+test("mobile navigation, noir dark-only appearance and keyboard person selection", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto("/#/auth/sign-in");
   const anna = page.getByRole("button", { name: "Wejdź jako Anna Kowalska", exact: true });
@@ -289,7 +291,7 @@ test("mobile navigation, light-only appearance and keyboard person selection", a
   await page.reload();
   await expect(page.getByRole("combobox", { name: "Motyw" })).toHaveCount(0);
   await expect(page.locator("html")).not.toHaveClass(/dark/);
-  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(244, 244, 240)");
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(10, 10, 10)");
   await page.screenshot({ path: "artifacts/settings-mobile-light.png", fullPage: true });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
@@ -458,7 +460,7 @@ test("legacy dark preference keeps scenario data and renders the light interface
     "Zachowaj mój profil",
   );
   await expect(page.locator("html")).not.toHaveClass(/dark/);
-  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(244, 244, 240)");
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(10, 10, 10)");
   await page.getByRole("button", { name: "Zapisz profil", exact: true }).click();
   expect(
     await page.evaluate((key) => JSON.parse(localStorage.getItem(key)!).theme, STORAGE_KEY),
@@ -576,34 +578,27 @@ test("desktop reset synchronizes search, category and facets with the URL", asyn
   );
 });
 
-test("canonical marketplace typography and search geometry match Poster People breakpoints", async ({
+test("marketplace typography follows the noir design system at every breakpoint", async ({
   page,
 }) => {
-  for (const [width, title, card] of [
-    [1280, "72px", "28px"],
-    [1100, "58px", "26px"],
-    [850, "52px", "28px"],
-    [390, "43px", "26px"],
-  ] as const) {
+  for (const width of [1280, 1100, 850, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/#/oferty");
-    await expect(page.locator(".pp-intro-copy h1")).toHaveCSS("font-size", title);
-    await expect(page.locator(".pp-job-title").first()).toHaveCSS("font-size", card);
+    const title = page.locator(".pp-intro-copy h1");
+    await expect(title).toHaveCSS("font-family", /Climate Crisis/);
+    await expect(title).toHaveCSS("text-transform", "uppercase");
+    await expect(page.locator(".pp-job-title").first()).toHaveCSS("font-family", /Climate Crisis/);
+    await expect(page.locator(".pp-salary-tag").first()).toHaveCSS("font-family", /Bangers/);
     await expect(page.getByRole("textbox", { name: "Szukaj ofert", exact: true })).toBeVisible();
-    if (width === 1280) {
-      expect((await page.locator(".pp-search-form").boundingBox())!.width).toBe(1200);
-      await expect(page.locator(".pp-salary-tag").first()).toHaveCSS("font-size", "15px");
-    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
   }
-  for (const [width, title, salary] of [
-    [1280, "64px", "24px"],
-    [850, "46px", "20px"],
-    [390, "47px", "25px"],
-  ] as const) {
+  for (const width of [1280, 850, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/#/oferty/ai-product-manager");
-    await expect(page.locator(".pp-offer-hero h1")).toHaveCSS("font-size", title);
-    await expect(page.locator(".pp-offer-pay .pp-salary-tag")).toHaveCSS("font-size", salary);
+    await expect(page.locator(".pp-offer-hero h1")).toHaveCSS("font-family", /Climate Crisis/);
+    await expect(page.locator(".pp-offer-pay .pp-salary-tag")).toHaveCSS("font-family", /Bangers/);
   }
 });
 
@@ -648,39 +643,25 @@ for (const width of [1280, 390])
     await expect(page.getByRole("textbox", { name: "Szukaj ofert", exact: true })).toHaveValue("");
   });
 
-test("homepage surfaces and marketplace action type roles match the shared reference", async ({
-  page,
-}) => {
+test("homepage frames and marketplace actions use noir anatomy", async ({ page }) => {
   await page.goto("/#/");
-  const cards = page.locator("main article.prototype-panel");
+  const cards = page.locator("main article.home-cat");
   await expect(cards).toHaveCount(3);
   for (const card of await cards.all()) {
-    await expect(card).toHaveCSS("border-radius", "24px");
-    await expect(card).toHaveCSS("box-shadow", /rgb\(24, 24, 24\).*1px inset/);
+    await expect(card.locator(".kf__content")).toBeVisible();
+    await expect(card).toHaveCSS("border-radius", "0px");
   }
-  for (const [width, searchSize, offerSize, payLine] of [
-    [1280, "14px", "14px", "34.8px"],
-    [1100, "14px", "13px", "31.9px"],
-    [850, "12px", "12px", "29px"],
-    [700, "12px", "14px", "36.25px"],
-    [600, "12px", "14px", "33.75px"],
-    [390, "12px", "14px", "33.75px"],
-  ] as const) {
+  for (const width of [1280, 850, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/#/oferty");
     const search = page.getByRole("button", { name: "Szukaj", exact: true });
-    await expect(search).toHaveCSS("font-size", searchSize);
-    await expect(search).toHaveCSS("font-weight", "600");
-    await expect(search).toHaveCSS("letter-spacing", "normal");
-    await expect(search).toHaveCSS("line-height", `${parseInt(searchSize) * 1.5}px`);
-    await expect(search).toHaveCSS("border-top-width", "1px");
-    await expect(search).toHaveCSS("box-shadow", "none");
+    await expect(search).toHaveCSS("font-family", /Bangers/);
+    await expect(search).toHaveCSS("text-transform", "uppercase");
+    await expect(search).toHaveCSS("border-radius", "0px");
     await page.goto("/#/oferty/ai-product-manager");
     const action = page.locator(".pp-offer-actions a").first();
-    await expect(action).toHaveCSS("font-size", offerSize);
-    await expect(action).toHaveCSS("font-weight", "600");
-    await expect(action).toHaveCSS("line-height", `${parseInt(offerSize) * 1.5}px`);
-    await expect(page.locator(".pp-offer-pay .pp-salary-tag")).toHaveCSS("line-height", payLine);
+    await expect(action).toHaveCSS("font-family", /Bangers/);
+    await expect(action).toHaveCSS("text-transform", "uppercase");
   }
 });
 

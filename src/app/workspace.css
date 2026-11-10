@@ -139,7 +139,7 @@ a {
   white-space: nowrap;
 }
 .nav-link:hover {
-  background: var(--muted);
+  background: var(--gui-surface-muted);
   color: var(--foreground);
 }
 .nav-active {
@@ -301,7 +301,7 @@ a {
 }
 .job-map-canvas {
   min-height: 560px;
-  background: var(--muted);
+  background: var(--gui-surface-muted);
 }
 .job-map-marker {
   width: 42px;
@@ -865,7 +865,7 @@ code {
   font-size: var(--gui-text-xs);
 }
 .documents-table thead {
-  background: var(--muted);
+  background: var(--gui-surface-muted);
 }
 .documents-table th,
 .documents-table td {
@@ -880,7 +880,7 @@ code {
 }
 .documents-table tbody tr:hover,
 .documents-table tr[data-selected="true"] {
-  background: var(--muted);
+  background: var(--gui-surface-muted);
 }
 .documents-table .numeric-cell {
   text-align: right;

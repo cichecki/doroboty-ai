@@ -1,21 +1,22 @@
 /* Host-owned namespaced adaptation of Poster People 1.0.0; see immutable kit provenance. */
 :root {
-  color-scheme: light;
-  --pp-paper: #f4f4f0;
-  --pp-surface: #fff;
-  --pp-ink: #181818;
-  --pp-muted: #5e5a5c;
-  --pp-line: #d8d5d1;
-  --pp-action: #ff90e8;
-  --pp-action-hover: #ffacef;
-  --pp-fact: #ffe0f7;
-  --pp-yellow: #ffe45b;
-  --pp-surface-hover: #fffefa;
-  --pp-radius: 18px;
-  --pp-radius-small: 10px;
-  --pp-radius-large: 24px;
-  --pp-font-heading: "Geist Serif", Georgia, serif;
-  --pp-font: Arial, Helvetica, system-ui, sans-serif;
+  /* Namespaced marketplace roles, pointed at noir (src/sandbox/noir). */
+  --pp-paper: #0a0a0a;
+  --pp-surface: #151515;
+  --pp-ink: #f2efe8;
+  --pp-on-ink: #0a0a0a;
+  --pp-muted: #a8a49b;
+  --pp-line: #3a3835;
+  --pp-action: #f2efe8;
+  --pp-action-hover: #d8d4cb;
+  --pp-fact: #1f1f1f;
+  --pp-yellow: #b9b5ac;
+  --pp-surface-hover: #1f1f1f;
+  --pp-radius: 0;
+  --pp-radius-small: 0;
+  --pp-radius-large: 0;
+  --pp-font-heading: "Climate Crisis", Impact, sans-serif;
+  --pp-font: "Satoshi", system-ui, sans-serif;
 }
 
 /* Extracted from the accepted prototype. See CHANGES.md and provenance.json. */
@@ -33,7 +34,7 @@
 .pp-search-form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 250px 180px;
-  border: 1px solid var(--pp-ink);
+  border: 3px solid var(--pp-ink);
   border-radius: var(--pp-radius-large);
   background: var(--pp-surface);
   padding: 7px;
@@ -102,7 +103,7 @@
 }
 .pp-category-tab {
   background: transparent;
-  border: 1px solid var(--pp-ink);
+  border: 3px solid var(--pp-ink);
   border-radius: var(--pp-radius);
   min-height: 56px;
   padding: 12px 18px;
@@ -126,10 +127,10 @@
 }
 .pp-category-tab.pp-selected {
   background: var(--pp-ink);
-  color: white;
+  color: var(--pp-on-ink);
 }
 .pp-category-tab.pp-selected small {
-  color: #e6e3e3;
+  color: var(--pp-on-ink);
 }
 .pp-category-tab:hover:not(.pp-selected) {
   background: var(--pp-surface);
@@ -139,7 +140,7 @@
   opacity: 0.8;
 }
 .pp-filter-panel {
-  border: 1px solid var(--pp-ink);
+  border: 3px solid var(--pp-ink);
   border-radius: var(--pp-radius);
   background: var(--pp-surface);
   overflow: hidden;
@@ -149,7 +150,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px;
-  border-bottom: 1px solid var(--pp-ink);
+  border-bottom: 2px solid var(--pp-ink);
   gap: 10px;
 }
 .pp-filter-heading h2 {
@@ -212,7 +213,7 @@
   display: grid;
   grid-template-columns: 66px minmax(0, 1fr) 236px;
   background: var(--pp-surface);
-  border: 1px solid var(--pp-ink);
+  border: 3px solid var(--pp-ink);
   border-radius: var(--pp-radius-large);
   overflow: hidden;
   position: relative;
@@ -238,7 +239,7 @@
   overflow-wrap: anywhere;
 }
 .pp-job-topline .pp-separator {
-  color: #aaa;
+  color: var(--pp-muted);
 }
 .pp-job-category {
   color: var(--pp-muted);
@@ -302,7 +303,7 @@
   background: var(--pp-surface);
 }
 .pp-job-side {
-  border-left: 1px solid var(--pp-ink);
+  border-left: 2px solid var(--pp-ink);
   padding: 20px 19px 18px;
   display: flex;
   flex-direction: column;
@@ -350,7 +351,7 @@
   display: inline-block;
   font-weight: 600;
   padding: 5px 15px 5px 8px;
-  border-radius: 999px;
+  border-radius: 0;
   max-width: 100%;
 }
 .pp-salary-missing {
@@ -397,7 +398,7 @@
   align-items: center;
   gap: 8px;
   padding: 5px 8px;
-  border: 1px solid var(--pp-ink);
+  border: 3px solid var(--pp-ink);
   border-radius: var(--pp-radius-small);
   font-size: 11px;
   background: var(--pp-surface);
@@ -422,7 +423,7 @@
   margin-right: auto;
 }
 .pp-page-button {
-  border: 1px solid var(--pp-ink);
+  border: 3px solid var(--pp-ink);
   border-radius: var(--pp-radius);
   min-width: 36px;
   height: 36px;
@@ -437,11 +438,11 @@
 }
 .pp-page-button[aria-current="page"] {
   background: var(--pp-ink);
-  color: white;
+  color: var(--pp-on-ink);
 }
 .pp-empty-state {
   text-align: center;
-  border: 1px solid var(--pp-ink);
+  border: 3px solid var(--pp-ink);
   border-radius: var(--pp-radius);
   background: var(--pp-surface);
   padding: 65px 25px;
@@ -451,7 +452,7 @@
   place-items: center;
   width: 63px;
   height: 63px;
-  border: 1px solid var(--pp-ink);
+  border: 3px solid var(--pp-ink);
   border-radius: 50%;
   background: var(--pp-fact);
   margin: 0 auto 22px;
@@ -473,7 +474,7 @@
 }
 
 .pp-dialog {
-  border: 1px solid var(--pp-ink);
+  border: 3px solid var(--pp-ink);
   border-radius: var(--pp-radius-large);
   padding: 0;
   color: var(--pp-ink);
@@ -490,8 +491,8 @@
   justify-content: space-between;
   gap: 20px;
   padding: 25px;
-  border-bottom: 1px solid var(--pp-ink);
-  background: white;
+  border-bottom: 2px solid var(--pp-ink);
+  background: var(--pp-surface);
 }
 .pp-dialog-heading h2 {
   font-size: 24px;
@@ -526,8 +527,8 @@
   position: sticky;
   bottom: 0;
   padding: 15px 24px max(15px, env(safe-area-inset-bottom));
-  background: white;
-  border-top: 1px solid var(--pp-ink);
+  background: var(--pp-surface);
+  border-top: 2px solid var(--pp-ink);
 }
 @media (max-width: 1100px) {
   .pp-category-tab {
@@ -580,7 +581,7 @@
   .pp-filter-button > span:last-child:not(:first-child) {
     font-size: 10px;
     background: var(--pp-ink);
-    color: white;
+    color: var(--pp-on-ink);
     border-radius: var(--pp-radius-small);
     min-width: 17px;
     height: 17px;
@@ -747,7 +748,7 @@
   .pp-job-side {
     grid-column: 1/-1;
     border-left: 0;
-    border-top: 1px solid var(--pp-ink);
+    border-top: 2px solid var(--pp-ink);
     padding: 13px 15px;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -849,7 +850,7 @@
 .pp-filter-group input[type="checkbox"] {
   appearance: none;
   border: 1px solid var(--pp-muted);
-  border-radius: 5px;
+  border-radius: 0;
   background: var(--pp-surface);
   position: relative;
 }
@@ -864,7 +865,7 @@
   top: 1px;
   width: 5px;
   height: 9px;
-  border: solid white;
+  border: solid var(--pp-on-ink);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }

@@ -50,8 +50,8 @@
 .application-company [data-company-logo] {
   width: 44px;
   height: 44px;
-  border: 1px solid var(--gui-edge);
-  border-radius: 10px;
+  border: 3px solid var(--gui-edge);
+  border-radius: 0;
 }
 .application-offer h2 {
   font-size: 28px;
@@ -295,7 +295,13 @@
 .application-actions .application-send {
   min-width: 161px;
 }
+/* Sent state keeps the master red instead of the generic disabled grey. */
 .application-actions .application-send:disabled {
-  background: var(--gui-color-1);
-  color: var(--gui-text);
+  --bg: var(--red);
+  --fg: var(--white);
+  color: var(--white);
+}
+.application-actions .application-send:disabled .nbtn__label {
+  color: var(--white) !important;
+  -webkit-text-stroke: 5px var(--ink);
 }

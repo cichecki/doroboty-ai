@@ -1,65 +1,79 @@
 import { Link } from "react-router";
-import { ArrowUpRight, Bookmark, MapPin, Monitor } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { usePrototype } from "@/features/prototype/store";
+import { Frame } from "@/sandbox/noir/comic";
+import { IconBookmark, IconLevel, IconPin, IconWorkMode } from "@/sandbox/noir/icons";
 import type { JobWithCompany } from "./types";
 import { categoryLabels, functionLabels, remoteLabels, seniorityLabels } from "./presentation";
-import { CompanyLogo } from "./company-logo";
 import { SalaryFact } from "./salary-fact";
+
+/** Stable per-job seed, so every card keeps its own skewed frame between renders. */
+function seedFor(id: string) {
+  let h = 7;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) % 997;
+  return h;
+}
+
+/* Noir job card: skewed comic frame, display title, salary marker and a primary action. */
 export function JobCard({ job, saved }: { job: JobWithCompany; saved?: boolean }) {
   const { run } = usePrototype();
+  const seed = seedFor(job.id);
   return (
-    <article className="pp-job-card">
-      <CompanyLogo company={job.company} />
-      <div className="pp-job-main">
-        <div className="pp-job-topline">
-          <Link className="pp-job-company" to={`/firmy/${job.company.slug}`}>
+    <Frame
+      as="article"
+      seed={seed}
+      skew={10 + (seed % 9)}
+      hoverMorph
+      dots
+      className="jcard"
+      aria-labelledby={`job-${job.id}`}
+    >
+      <div className="jcard__main">
+        <p className="jcard__topline">
+          <Link className="jcard__company" to={`/firmy/${job.company.slug}`}>
             {job.company.name}
           </Link>
-          <span className="pp-separator">/</span>
-          <span className="pp-job-category">{categoryLabels[job.category]}</span>
-        </div>
-        <h3 className="pp-job-title">
+          <span className="tag-cat tag-cat--sm tag-cat--grey">{categoryLabels[job.category]}</span>
+          <span className="tag-cat tag-cat--sm tag-cat--grey">{functionLabels[job.function]}</span>
+        </p>
+        <h3 className="jcard__title pp-job-title" id={`job-${job.id}`}>
           <Link to={`/oferty/${job.slug}`}>{job.title}</Link>
         </h3>
-        <div className="pp-job-facts">
+        <p className="jcard__facts">
           <span>
-            <MapPin className="pp-icon" />
-            {job.locations.join(" / ")}
+            <IconPin /> {job.locations.join(" / ")}
           </span>
           <span>
-            <Monitor className="pp-icon" />
-            {remoteLabels[job.remoteStatus]}
+            <IconWorkMode mode={job.remoteStatus} /> {remoteLabels[job.remoteStatus]}
           </span>
-          <span>{seniorityLabels[job.seniority]}</span>
-        </div>
-        <div className="pp-job-tags">
-          <span>{functionLabels[job.function]}</span>
-        </div>
+          <span>
+            <IconLevel level={job.seniority} /> {seniorityLabels[job.seniority]}
+          </span>
+        </p>
       </div>
-      <div className="pp-job-side">
-        <div className="pp-job-side-top">
-          <span className="pp-job-age">
+      <div className="jcard__side" data-frame-divider>
+        <div className="jcard__sidetop">
+          <span className="jcard__date">
             {new Intl.DateTimeFormat("pl-PL").format(new Date(job.publishedAt))}
           </span>
           {saved !== undefined && (
-            <Button
-              className="pp-save-button"
-              variant="ghost"
-              size="icon-sm"
+            <button
+              type="button"
+              className={`jcard__save${saved ? " is-on" : ""}`}
               aria-label={`Zapisz ofertę: ${job.title}`}
               aria-pressed={saved}
               onClick={() => run({ type: "toggle_saved", jobId: job.id })}
             >
-              <Bookmark className="pp-icon" />
-            </Button>
+              <IconBookmark on={saved} />
+            </button>
           )}
         </div>
         <SalaryFact job={job} />
-        <Link className="pp-detail-button" to={`/oferty/${job.slug}`}>
-          Zobacz rolę <ArrowUpRight className="pp-icon" />
+        <Link className={buttonVariants({ size: "sm" })} to={`/oferty/${job.slug}`}>
+          Zobacz rolę <ArrowRight />
         </Link>
       </div>
-    </article>
+    </Frame>
   );
 }

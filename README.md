@@ -1,19 +1,13 @@
 # DoRoboty.ai — AIPH3 prototype
 
-A frontend-only job marketplace for participants to extend and test. Built with React, TypeScript and Vite, using Base UI components. The required visual direction for new and changed screens is the accepted Poster People design system.
+A frontend-only job marketplace for participants to extend and test. Built with React, TypeScript and Vite, using Base UI components. The visual direction is the DoRoboty.ai noir design system (`design-system.html`).
 
 ## Design system — start here for UI work
 
-Read [project integration instructions](docs/design-system/README.md), [host implementation rules](docs/design-system/IMPLEMENTATION.md) and [application acceptance checklist](docs/design-system/VERIFICATION.md), then [design.md](docs/design-system/agent-kit/design.md), [component API](docs/design-system/agent-kit/components/API.md) and the relevant [human documentation](docs/design-system/agent-kit/reference/index.html). The complete 67-file kit is stored under docs/design-system/agent-kit, including reusable CSS/JS, component states, listing/offer examples, screenshots, Geist Serif with license and illustration. No other chat or global skill is required.
-
-```sh
-npm run design-system:check
-npm run design-system:dev
-```
-
-With Node 24, the first command verifies the preserved kit and examples; the second serves a separate local preview at http://127.0.0.1:8952/. No kit installation is needed. The main app uses port 3001 as below.
-
-Build UI from this system, adapting its anatomy and visual roles into the existing React/Base UI components and host tokens. Preserve application behavior and hash routing; do not replace product state with the standalone demo fixtures/controllers. The application has a host adaptation. For every UI task, compare the affected anatomy, type roles, state and keyboard behavior with the reference; passing kit checks alone does not establish visual acceptance. See the integration guide for exact reading order, assets, React mapping, responsive rules and verification. AGENTS.md and CLAUDE.md enforce the same direction.
+The app uses the DoRoboty.ai **noir** design system. Its reference page is
+http://127.0.0.1:3001/design-system.html (sources in `src/sandbox/noir/`). `tokens.css` maps the
+app tokens to noir roles and `src/app/noir-host.css` adapts the screens. Read [GUI.md](GUI.md)
+before UI work. The earlier Poster People kit in `docs/design-system/` is kept as history only.
 
 ## Run
 
