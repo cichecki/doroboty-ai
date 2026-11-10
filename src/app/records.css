@@ -337,3 +337,54 @@
   border-radius: 0;
   background: var(--gui-canvas);
 }
+
+/* Blok „Rola w projekcie” (ScopeBlock) */
+.scope-block {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+.scope-block__heading {
+  font-size: 18px;
+}
+.scope-block__rows {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+.scope-block__row {
+  display: grid;
+  gap: 2px;
+  padding-block: 8px;
+  border-top: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+.scope-block__row dt {
+  font-size: 13px;
+  color: var(--gui-text-muted);
+}
+.scope-block__row dd {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  font-size: 15px;
+}
+.scope-block__short {
+  font-weight: 700;
+}
+.scope-block__evidence {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--gui-text-muted);
+}
+.scope-block__evidence::before {
+  content: "„";
+}
+.scope-block__evidence::after {
+  content: "”";
+}
+.own-tag {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+}

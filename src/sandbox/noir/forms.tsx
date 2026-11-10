@@ -174,15 +174,17 @@ export function NRadioGroup({
   value,
   onChange,
   options,
+  disabled,
 }: {
   legend: string;
   name: string;
   value: string;
   onChange: (v: string) => void;
   options: [string, string][];
+  disabled?: boolean;
 }) {
   return (
-    <fieldset className="nradio-group">
+    <fieldset className="nradio-group" disabled={disabled}>
       <legend>{legend}</legend>
       <div className="nradio-group__opts">
         {options.map(([v, l]) => (

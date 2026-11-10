@@ -305,3 +305,65 @@
   color: var(--white) !important;
   -webkit-text-stroke: 5px var(--ink);
 }
+
+/* Paski zakresu pracy w formularzu kandydata */
+.application-project .field > span {
+  font-size: 15px;
+}
+.application-project input {
+  margin-top: 6px;
+}
+.scope-questions h3 {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+.scope-bar {
+  display: grid;
+  gap: 12px;
+  padding-block: 18px;
+  border-top: 1px dashed var(--pp-line);
+}
+.scope-bar .nradio-group__opts {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+.scope-bar .nradio {
+  align-items: flex-start;
+  line-height: 1.5;
+}
+.scope-bar .nradio__mark {
+  flex: none;
+  margin-top: 3px;
+}
+.scope-probe {
+  padding: 8px 12px;
+  border-inline-start: 3px solid var(--gui-text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.scope-evidence {
+  display: grid;
+  gap: 6px;
+}
+.scope-evidence label {
+  font-size: 15px;
+  font-weight: 700;
+}
+.scope-evidence textarea {
+  min-height: 110px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.scope-evidence p {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.application-recruiter-view h3 {
+  font-size: 26px;
+  margin-bottom: 12px;
+}
+.scope-bar .nradio__input {
+  z-index: 1;
+  cursor: pointer;
+}

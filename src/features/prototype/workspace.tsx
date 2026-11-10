@@ -18,6 +18,9 @@ import { portraitFor } from "@/sandbox/noir/portraits";
 import { MatchScore } from "./match-score";
 import { RecruitingApplication } from "./recruiting-application";
 import { CandidateApplication } from "./candidate-application";
+import { ScopeQuestions, scopeProblems, type ScopeDraft } from "./scope-questions";
+import { ScopeBlock } from "./scope-block";
+import { barsForCategory, evidenceRequired, findVagueSentence } from "./scope";
 
 export function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -275,6 +278,18 @@ export function ApplyPage() {
   const [consent, setConsent] = useState(false);
   const [message, setMessage] = useState("");
   const [attempted, setAttempted] = useState(false);
+  const [project, setProject] = useState("");
+  const [scope, setScope] = useState<ScopeDraft>({});
+  const projectInput = useRef<HTMLInputElement>(null);
+  const scopeOpened = useRef(false);
+  const openedAt = useRef(0);
+  const jobId = job?.id;
+  useEffect(() => {
+    if (!jobId || scopeOpened.current) return;
+    scopeOpened.current = true;
+    openedAt.current = Date.now();
+    run({ type: "scope_open", jobId });
+  }, [jobId, run]);
   const answerInput = useRef<HTMLTextAreaElement>(null);
   const sendButton = useRef<HTMLButtonElement>(null);
   const submittedOnce = useRef(false);
@@ -302,6 +317,22 @@ export function ApplyPage() {
         </Link>
       </section>
     );
+  const bars = barsForCategory(job.category);
+  const variant = state.experiment.formVariant;
+  const projectInvalid = attempted && project.trim() === "";
+  const scopeComplete = bars.every((bar) => scope[bar.id]?.answer);
+  const summaryAnswers = bars.flatMap((bar) => {
+    const item = scope[bar.id];
+    return item?.answer
+      ? [
+          {
+            barId: bar.id,
+            answer: item.answer,
+            evidence: evidenceRequired(variant, item.answer) ? item.evidence : undefined,
+          },
+        ]
+      : [];
+  });
   function submit(e: FormEvent) {
     e.preventDefault();
     if (submittedOnce.current) return;
@@ -310,11 +341,49 @@ export function ApplyPage() {
       answerInput.current?.focus();
       return;
     }
+    if (project.trim() === "") {
+      projectInput.current?.focus();
+      return;
+    }
+    const problems = scopeProblems(bars, variant, scope);
+    if (problems.length) {
+      const first = bars.find((bar) => problems.includes(bar.id))!;
+      const target = scope[first.id]?.answer
+        ? document.getElementById(`scope-evidence-${first.id}`)
+        : document.querySelector<HTMLElement>(`input[name="scope-${first.id}"]`);
+      target?.focus();
+      return;
+    }
     if (!consent) {
       document.getElementById("application-consent")?.focus();
       return;
     }
-    if (run({ type: "submit", jobId: job!.id, notes, generated, answer, consent })) {
+    const scopeAnswers = bars.map((bar) => {
+      const item = scope[bar.id]!;
+      const probeQuote = findVagueSentence(answer, bar) ?? undefined;
+      return {
+        barId: bar.id,
+        answer: item.answer!,
+        evidence: evidenceRequired(variant, item.answer) ? item.evidence.trim() : undefined,
+        probeQuote,
+        changedAfterProbe: Boolean(probeQuote) && item.firstAnswer !== item.answer,
+      };
+    });
+    if (
+      run({
+        type: "submit",
+        jobId: job!.id,
+        notes,
+        generated,
+        answer,
+        consent,
+        scope: {
+          project: project.trim(),
+          answers: scopeAnswers,
+          durationMs: Math.max(0, Math.round(Date.now() - openedAt.current)),
+        },
+      })
+    ) {
       submittedOnce.current = true;
       setSubmitted(true);
       if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -355,6 +424,27 @@ export function ApplyPage() {
               contextLabel="CV z Twojego profilu"
             />
           </section>
+          <section className="application-form-section application-project">
+            <Field label="Projekt, o którym opowiadasz">
+              <Input
+                ref={projectInput}
+                disabled={submitted}
+                maxLength={200}
+                aria-invalid={projectInvalid || undefined}
+                aria-describedby={projectInvalid ? "application-project-error" : undefined}
+                value={project}
+                onChange={(e) => {
+                  setProject(e.target.value);
+                  setConsent(false);
+                }}
+              />
+            </Field>
+            {projectInvalid && (
+              <p id="application-project-error" className="error-message" role="alert">
+                Wpisz, o którym projekcie opowiadasz.
+              </p>
+            )}
+          </section>
           <section
             className="application-form-section application-answer"
             aria-label="Odpowiedź do aplikacji"
@@ -385,6 +475,32 @@ export function ApplyPage() {
                 : `Minimum ${MIN_APPLICATION_ANSWER_LENGTH} znaków. Obecnie: ${answerLength}.`}
             </p>
           </section>
+          <section
+            className="application-form-section application-scope"
+            aria-labelledby="scope-questions-title"
+          >
+            <ScopeQuestions
+              bars={bars}
+              variant={variant}
+              answerText={answer}
+              value={scope}
+              disabled={submitted}
+              attempted={attempted}
+              onChange={(next) => {
+                setScope(next);
+                setConsent(false);
+              }}
+            />
+          </section>
+          {scopeComplete && (
+            <section
+              className="application-form-section application-recruiter-view"
+              aria-labelledby="application-recruiter-view-title"
+            >
+              <h3 id="application-recruiter-view-title">Tak zobaczy to rekruter</h3>
+              <ScopeBlock answers={summaryAnswers} />
+            </section>
+          )}
           <div className="application-form-section application-submit">
             <label className="application-consent">
               <Checkbox

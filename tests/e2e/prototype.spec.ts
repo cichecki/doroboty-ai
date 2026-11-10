@@ -7,6 +7,17 @@ async function choose(page: Page, name: string) {
   await page.goto("/#/auth/sign-in");
   await page.getByRole("button", { name: `Wejdź jako ${name}`, exact: true }).click();
 }
+// answer: wartość odpowiedzi 1-4 (2 nie wymaga dowodu w żadnym wariancie)
+async function fillScope(page: Page, answer = 2) {
+  await page.getByLabel("Projekt, o którym opowiadasz").fill("Automatyzacja zgłoszeń");
+  const groups = page.locator("fieldset.nradio-group");
+  for (let i = 0; i < 3; i++)
+    await groups
+      .nth(i)
+      .getByRole("radio")
+      .nth(answer - 1)
+      .check();
+}
 async function application(page: Page) {
   await choose(page, "Anna Kowalska");
   await page.goto("/#/aplikuj/ai-product-manager");
@@ -15,6 +26,7 @@ async function application(page: Page) {
     .fill(
       "Zaprojektowałam proces automatyzacji i przeprowadziłam badania użytkowników. Wynik: krótszy czas obsługi zgłoszeń o 30%.",
     );
+  await fillScope(page);
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Wyślij aplikację", exact: true }).click();
 }
@@ -65,6 +77,7 @@ for (const [name, filename] of [
     await page
       .getByLabel("Dlaczego pasujesz do tej roli?")
       .fill("Mam doświadczenie w rozwoju produktów i automatyzacji obsługi zgłoszeń.");
+    await fillScope(page);
     await page.getByRole("checkbox").check();
     await page.getByRole("button", { name: "Wyślij aplikację", exact: true }).click();
     await page.getByRole("link", { name: "AI Operations Specialist", exact: true }).click();
@@ -131,6 +144,7 @@ test("published job → saved offer/draft → submitted application → employer
   ).toMatchObject({ notes: "", generated: "", answer: draftAnswer });
   await page.reload();
   await expect(answer).toHaveValue(draftAnswer);
+  await fillScope(page);
   await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Wyślij aplikację", exact: true }).click();
   await expect(page.getByText("Aplikacja została wysłana.", { exact: false })).toBeVisible();
@@ -323,6 +337,7 @@ test("application submission explains short answers and missing approval without
   await page.goto("/#/aplikuj/ai-product-manager");
   const answer = page.getByLabel("Dlaczego pasujesz do tej roli?");
   const send = page.getByRole("button", { name: "Wyślij aplikację", exact: true });
+  await fillScope(page);
   await answer.fill("krótka odpowiedź");
   await page.getByRole("checkbox").check();
   await expect(send).toBeEnabled();
@@ -372,7 +387,8 @@ for (const width of [1440, 375]) {
     const form = page.locator("main form");
     const answer = page.getByLabel("Dlaczego pasujesz do tej roli?");
     await expect(answer).toHaveValue(draft.answer);
-    await expect(form.getByRole("textbox")).toHaveCount(1);
+    // pole projektu i odpowiedź; pole dowodu pojawia się dopiero po wyborze odpowiedzi 3 lub 4
+    await expect(form.getByRole("textbox")).toHaveCount(2);
     await expect(page.getByLabel("Twoje notatki do aplikacji (opcjonalnie)")).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Przygotuj propozycję z AI" })).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Użyj propozycji" })).toHaveCount(0);
@@ -391,6 +407,12 @@ for (const width of [1440, 375]) {
       ),
     ).toBe(true);
     await answer.focus();
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press("Tab");
+      await expect(
+        page.locator("fieldset.nradio-group").nth(i).getByRole("radio").first(),
+      ).toBeFocused();
+    }
     await page.keyboard.press("Tab");
     await expect(page.getByRole("checkbox")).toBeFocused();
     await page.keyboard.press("Tab");
@@ -399,9 +421,7 @@ for (const width of [1440, 375]) {
     await expect(page.getByRole("button", { name: "Zapisz szkic", exact: true })).toBeFocused();
     const editedAnswer = "Moja poprawiona odpowiedź opisuje doświadczenie potrzebne w tej roli.";
     await answer.fill(editedAnswer);
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Tab");
-    await page.keyboard.press("Tab");
+    for (let i = 0; i < 6; i++) await page.keyboard.press("Tab");
     await page.keyboard.press("Enter");
     await expect(page.getByRole("status")).toHaveText("Szkic został zapisany.");
     expect(
@@ -419,8 +439,9 @@ for (const width of [1440, 375]) {
       path: `artifacts/application-simplified-${width}.png`,
       fullPage: true,
     });
+    await fillScope(page);
     await answer.focus();
-    await page.keyboard.press("Tab");
+    for (let i = 0; i < 4; i++) await page.keyboard.press("Tab");
     await page.keyboard.press("Space");
     await page.keyboard.press("Tab");
     await page.keyboard.press("Enter");
@@ -838,6 +859,7 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
     );
     await page.getByRole("button", { name: "Zapisz szkic", exact: true }).click();
     await expect(page.locator(".confetti-burst")).toHaveCount(0);
+    await fillScope(page);
     await page.getByRole("checkbox").check();
     await page.clock.install({ time: new Date("2026-11-03T10:00:00Z") });
     await page.clock.pauseAt(new Date("2026-11-03T10:00:01Z"));
