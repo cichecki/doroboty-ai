@@ -19,7 +19,7 @@ import { MatchScore } from "./match-score";
 import { RecruitingApplication } from "./recruiting-application";
 import { CandidateApplication } from "./candidate-application";
 import { ScopeQuestions, scopeProblems, type ScopeDraft } from "./scope-questions";
-import { OwnTag, ScopeBlock } from "./scope-block";
+import { OwnTag, SCOPE_HEADING, ScopeBlock } from "./scope-block";
 import {
   barsForCategory,
   compareByMultiplier,
@@ -655,9 +655,10 @@ export function ApplicationsPage({ employer = false }: { employer?: boolean }) {
               </div>
               {employer && <p className="app-card__summary">{a.summary}</p>}
               {employer && a.scope && (
-                <details className="app-card__scope">
-                  <summary>Rola w projekcie</summary>
+                <details className="app-card__scope" open>
+                  <summary>{SCOPE_HEADING}</summary>
                   <ScopeBlock
+                    meters
                     answers={a.scope.answers}
                     heading={null}
                     subtitle={`Projekt: ${a.scope.project}`}

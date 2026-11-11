@@ -338,7 +338,7 @@
   background: var(--gui-canvas);
 }
 
-/* Blok „Rola w projekcie” (ScopeBlock) */
+/* Blok „Poziom samodzielności w projekcie” (ScopeBlock) */
 .scope-block {
   display: grid;
   gap: 10px;
@@ -403,11 +403,105 @@
 }
 .app-card__scope summary {
   cursor: pointer;
-  font-weight: 700;
-  font-size: 14px;
+  width: fit-content;
+  font: 400 22px/1.1 var(--f-action);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 .app-card__scope[open] summary {
-  margin-bottom: 10px;
+  margin-bottom: 14px;
+}
+
+/* Paski samodzielności (widoki rekrutera): 3 obok siebie, gdy jest miejsce */
+.scope-block--meters {
+  container-type: inline-size;
+}
+.scope-block--meters .scope-block__rows {
+  gap: 22px 28px;
+}
+@container (min-width: 500px) {
+  /* Subgrid keeps titles, bars and labels on shared lines even when titles wrap differently */
+  .scope-block--meters .scope-block__rows {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    row-gap: 10px;
+  }
+  .scope-block--meters .scope-block__row {
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+  }
+  .scope-block--meters .scope-block__row dt {
+    align-self: end;
+  }
+  .scope-block--meters .scope-block__row dd {
+    display: contents;
+  }
+}
+.scope-block--meters .scope-block__row {
+  align-content: start;
+  gap: 8px;
+  padding: 0;
+  border-top: 0;
+}
+.scope-block--meters .scope-block__row dt {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.scope-block--meters .scope-block__row dd {
+  gap: 8px;
+}
+.scope-block--meters .scope-block__short {
+  font: 400 21px/1.05 var(--f-action);
+  letter-spacing: 0.04em;
+}
+.scope-meter {
+  display: block;
+  height: 36px;
+  padding: 3px;
+  background: var(--white);
+  clip-path: polygon(0.8% 8%, 100% 0, 99.2% 92%, 0 100%);
+}
+.scope-meter__in {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3px;
+  height: 100%;
+  padding: 3px;
+  background: var(--ink);
+  clip-path: polygon(0.6% 6%, 100% 0, 99.4% 94%, 0 100%);
+}
+.scope-meter__seg {
+  background: #24221f;
+  clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%);
+}
+.scope-meter__seg[data-on] {
+  background:
+    linear-gradient(rgb(255 255 255 / 0.28) 0 18%, transparent 18%),
+    radial-gradient(circle, rgb(10 10 10 / 0.42) 1.1px, transparent 1.5px) 0 0 / 6px 6px,
+    var(--red);
+  animation: scope-seg-in var(--t-release, 520ms) cubic-bezier(0.3, 0.7, 0.4, 1.5) both;
+}
+.scope-meter__seg:nth-child(2)[data-on] {
+  animation-delay: 90ms;
+}
+.scope-meter__seg:nth-child(3)[data-on] {
+  animation-delay: 180ms;
+}
+.scope-meter__seg:nth-child(4)[data-on] {
+  animation-delay: 270ms;
+}
+/* Segment wipes in from its left edge (clip-path only: no transform layers to repaint) */
+@keyframes scope-seg-in {
+  from {
+    clip-path: polygon(7% 0, 7% 0, 0 100%, 0 100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scope-meter__seg[data-on] {
+    animation: none;
+  }
 }
 
 /* E2 study view */

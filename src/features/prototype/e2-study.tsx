@@ -191,6 +191,7 @@ export function E2StudyPage() {
                   <AnswerText text={a.answer} />
                   {view === "paski" && (
                     <ScopeBlock
+                      meters
                       answers={a.answers.map((answer, i) => ({
                         barId: bars[i].id,
                         answer,

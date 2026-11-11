@@ -48,33 +48,6 @@
   }
 }
 
-/* Host score facts share one readable treatment across lists and detail views. */
-.match-score {
-  display: inline-flex;
-  align-items: center;
-  max-width: 100%;
-  padding: 5px 12px 3px;
-  border-radius: 0;
-  color: var(--white);
-  clip-path: var(--shape-score);
-  font: 400 16px/1 var(--f-action);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.match-score[data-score-band="red"] {
-  background: var(--gui-match-red);
-}
-.match-score[data-score-band="orange"] {
-  background: var(--gui-match-orange);
-}
-.match-score[data-score-band="yellow"] {
-  background: var(--gui-match-yellow);
-}
-.match-score[data-score-band="green"] {
-  background: var(--gui-match-green);
-  color: var(--white);
-}
-
 /* C13 context returns share one anatomy across public and workspace screens. */
 .back-link {
   display: inline-flex;

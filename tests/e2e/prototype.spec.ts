@@ -151,7 +151,7 @@ test("published job → saved offer/draft → submitted application → employer
   await page.reload();
   await page.getByRole("link", { name: "Product Designer do automatyzacji", exact: true }).click();
   const candidateUrl = page.url();
-  await expect(page.getByText("Match Score: 84%", { exact: true })).toBeVisible();
+  await expect(page.getByRole("img", { name: "Match Score: 84%" })).toBeVisible();
   await choose(page, "Karolina Wiśniewska");
   await page.getByRole("link", { name: "Kandydaci", exact: true }).click();
   await page.getByRole("link", { name: "Anna Kowalska", exact: true }).click();
@@ -693,7 +693,7 @@ test("process sheet keeps notes across keyboard tabs and saves stage history wit
   await page.goto("/#/app/kandydaci/application-example");
   const note = page.getByLabel("Notatka rekrutacyjna (widoczna pracodawcy)");
   await expect(
-    page.locator(".record-meta").getByText("Match Score: 72%", { exact: true }),
+    page.locator(".record-meta").getByRole("img", { name: "Match Score: 72%" }),
   ).toBeVisible();
   await expect(page.getByText("Wynik przykładowy", { exact: true })).toHaveCount(0);
   await expect(page.locator("iframe[title='Podgląd CV (PDF)']")).toHaveCount(0);
@@ -924,7 +924,9 @@ test("candidate record shares snapshot tabs while excluding employer notes and m
   await expect(
     page.getByRole("heading", { level: 1, name: record.jobTitle, exact: true }),
   ).toBeVisible();
-  await expect(page.locator(".record-meta")).toContainText("Match Score: 72%");
+  await expect(
+    page.locator(".record-meta").getByRole("img", { name: "Match Score: 72%" }),
+  ).toBeVisible();
   await expect(page.locator("main")).not.toContainText(record.events[1].note);
   await expect(page.locator("main")).not.toContainText(record.sourceNotes);
   await expect(page.locator("main")).not.toContainText(record.generatedAnswer);

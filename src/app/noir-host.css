@@ -1545,13 +1545,6 @@ details > summary::marker {
   gap: 40px;
   margin-top: 40px;
 }
-.app-card .match-score {
-  position: absolute;
-  top: -18px;
-  right: 22px;
-  z-index: 3;
-  rotate: 3deg;
-}
 .app-card .ccard__head {
   padding-right: 0;
 }
@@ -1658,4 +1651,13 @@ a.nbtn {
 .application-send.nbtn,
 .nmenu__cta .nbtn {
   justify-self: start;
+}
+
+/* Match Score (MatchScore → .score-tag): percent sign smaller than the number */
+.score-tag__pct {
+  margin-left: 2px;
+  font-size: 0.55em;
+}
+.record-meta .score-tag {
+  rotate: -2deg;
 }

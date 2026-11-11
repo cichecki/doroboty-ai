@@ -100,7 +100,9 @@ test("the recruiter summary shows the short versions before consent", async ({ p
   for (let i = 0; i < 3; i++) await group(page, i).getByRole("radio").nth(1).check();
   const summary = page.getByRole("region", { name: "Tak zobaczy to rekruter" });
   await expect(summary).toBeVisible();
-  await expect(summary.getByText("Rola w projekcie", { exact: true })).toBeVisible();
+  await expect(
+    summary.getByText("Poziom samodzielności w projekcie", { exact: true }),
+  ).toBeVisible();
   for (const bar of bars) await expect(summary).toContainText(bar.options[1].recruiter);
 });
 
@@ -220,7 +222,7 @@ async function seed(page: Page, mutate: (state: ReturnType<typeof initialState>)
 }
 const cards = (page: Page) => page.locator("article.app-card");
 
-test("recruiter sees the own tag and an expandable role preview on the example application", async ({
+test("recruiter sees the own tag and open scope meters on the example application", async ({
   page,
 }) => {
   await page.goto("/");
@@ -229,8 +231,8 @@ test("recruiter sees the own tag and an expandable role preview on the example a
   const card = cards(page).filter({ hasText: "Marek Nowak" });
   await expect(card.getByText(`Sam: ${marekOwn} z 3 obszarów`)).toBeVisible();
   const details = card.locator("details");
-  await expect(details.getByText("Nie budował", { exact: true })).toBeHidden();
-  await details.getByText("Rola w projekcie", { exact: true }).click();
+  await expect(details).toHaveAttribute("open", "");
+  await expect(details.getByRole("img", { name: /poziom \d z 4/ })).toHaveCount(3);
   const category = employerJob.category;
   const rows = barsForCategory(category);
   await expect(details).toContainText(rows[0].options[2].recruiter);
@@ -267,7 +269,7 @@ test("a stronger application from Anna is listed before Marek and the detail sho
   await expect(cards(page).nth(1)).toContainText("Marek Nowak");
   await cards(page).first().getByRole("link", { name: "Anna Kowalska" }).click();
   const block = page.locator(".scope-block");
-  await expect(block.getByText("Rola w projekcie", { exact: true })).toBeVisible();
+  await expect(block.getByText("Poziom samodzielności w projekcie", { exact: true })).toBeVisible();
   await expect(block).toContainText("Projekt: Automatyzacja zgłoszeń");
   await expect(block.locator("q").first()).toHaveText(evidence);
 });
@@ -299,11 +301,11 @@ test("multiplier toggle changes the shown score and ordering, off keeps the plai
     await page.goto("/#/app/kandydaci");
     const marekCard = cards(page).filter({ hasText: "Marek Nowak" });
     await expect(
-      marekCard.getByText(`Match Score: ${multiplier ? boosted : plain}%`),
+      marekCard.getByRole("img", { name: `Match Score: ${multiplier ? boosted : plain}%` }),
     ).toBeVisible();
     const annaCard = cards(page).filter({ hasText: "Anna Kowalska" });
     await expect(
-      annaCard.getByText(`Match Score: ${multiplier ? strongBoosted : 40}%`),
+      annaCard.getByRole("img", { name: `Match Score: ${multiplier ? strongBoosted : 40}%` }),
     ).toBeVisible();
     // own 3 beats own 1 in scope order; multiplier order: compare resulting scores
     const expectedFirst = multiplier
@@ -314,7 +316,9 @@ test("multiplier toggle changes the shown score and ordering, off keeps the plai
     await expect(cards(page).first()).toContainText(expectedFirst);
     if (multiplier) {
       await page.goto(`/#/app/kandydaci/${marek.id}`);
-      await expect(page.locator(".record-meta")).toContainText(`Match Score: ${boosted}%`);
+      await expect(
+        page.locator(".record-meta").getByRole("img", { name: `Match Score: ${boosted}%` }),
+      ).toBeVisible();
     }
   }
 });
@@ -335,11 +339,14 @@ test("the candidate never sees the own tag or the multiplier score", async ({ pa
   await page.goto("/#/app/aplikacje");
   await expect(cards(page)).toHaveCount(1);
   await expect(page.getByText(/Sam: \d z 3 obszarów/)).toHaveCount(0);
-  await expect(page.getByText("Match Score: 50%")).toBeVisible();
+  await expect(page.getByRole("img", { name: "Match Score: 50%" })).toBeVisible();
   await page.goto("/#/app/aplikacje/application-anna");
   await expect(page.getByText(/Sam: \d z 3 obszarów/)).toHaveCount(0);
-  await expect(page.locator(".record-meta")).toContainText("Match Score: 50%");
+  await expect(
+    page.locator(".record-meta").getByRole("img", { name: "Match Score: 50%" }),
+  ).toBeVisible();
   await expect(page.locator(".scope-block")).toBeVisible();
+  await expect(page.locator(".scope-meter")).toHaveCount(0);
 });
 
 test("employer sees the scope bars in the job editor and they follow the selected category", async ({
@@ -374,8 +381,8 @@ test("E2 study page: current view has no scope block, bars view does, picks are 
   await expect(page.getByText(task)).toBeVisible();
   const cardList = page.locator("article.app-card");
   await expect(cardList).toHaveCount(10);
-  await expect(page.getByText(/Match Score: \d+%/)).toHaveCount(10);
-  await expect(page.getByText("Rola w projekcie")).toHaveCount(0);
+  await expect(page.getByRole("img", { name: /Match Score: \d+%/ })).toHaveCount(10);
+  await expect(page.getByText("Poziom samodzielności w projekcie")).toHaveCount(0);
   await expect(page.getByText(/Sam: \d z 3 obszarów/)).toHaveCount(0);
 
   await page.goto("/#/badanie/e2?widok=paski");

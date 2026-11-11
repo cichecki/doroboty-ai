@@ -60,7 +60,7 @@ export function ApplicationRecord({
           <span className="record-stage" tabIndex={-1} ref={statusRef}>
             {stageLabels[application.stage]}
           </span>
-          <MatchScore score={displayScore ?? application.score} />
+          <MatchScore size="sm" score={displayScore ?? application.score} />
           {submitted && (
             <span>
               Złożona:{" "}
@@ -82,6 +82,7 @@ export function ApplicationRecord({
                   <p>{application.answer}</p>
                   {application.scope && (
                     <ScopeBlock
+                      meters={!candidate}
                       answers={application.scope.answers}
                       subtitle={`Projekt: ${application.scope.project}`}
                     />
