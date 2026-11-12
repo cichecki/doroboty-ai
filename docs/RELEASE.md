@@ -13,18 +13,25 @@ Owner and first responder: Kuba (project owner, Vercel account that deploys).
 
 ## 1. Release a specific commit
 
-1. Commit everything. `git status` must show no changes to tracked files: Vercel CLI uploads the
-   working tree, not the commit.
+The Vercel project is connected to `github.com/cichecki/doroboty-ai` and its **production branch
+is `noir-migracja`** (changed from `main` on 2026-11-12). Every push to `noir-migracja` builds
+and goes live on the production URL automatically; pushes to other branches, including `main`,
+create login-protected previews. Each deployment records its Git commit (`vercel inspect` or the
+dashboard shows it).
+
+1. Work on another branch, or make sure the change is ready before pushing: a push to
+   `noir-migracja` is a release.
 2. Run `./scripts/verify` and make sure it passes (it needs Playwright Chromium:
-   `npx playwright install chromium`). Prefer pushing the branch and opening a PR so CI also
-   checks it on a clean Linux checkout.
-3. Deploy a preview with the commit recorded:
-   `vercel deploy -m commit=$(git rev-parse HEAD)`
-   and run the smoke test below on the preview while logged in to Vercel.
-4. Deploy to production the same way:
-   `vercel deploy --prod -m commit=$(git rev-parse HEAD)`
-5. Run the smoke test on the production URL in a private browser window (no Vercel login).
-6. Note the date, commit and deployment URL in the course channel or release notes.
+   `npx playwright install chromium`). For larger changes open a PR into `noir-migracja` so CI
+   checks it on a clean Linux checkout and Vercel builds a preview first.
+3. Push or merge to `noir-migracja`. Vercel builds and aliases the production URL.
+4. Run the smoke test below on the production URL in a private browser window (no Vercel login).
+5. Note the date and commit in the course channel or release notes.
+
+To release without a new commit, rebuild an existing deployment:
+`vercel redeploy <deployment-url> --target=production`.
+When `noir` is merged into `main`, switch the production branch back to `main` in the Vercel
+dashboard (project → Settings → Environments → Production → Branch Tracking).
 
 ## 2. Smoke test after every deployment (about 5 minutes)
 
@@ -48,6 +55,9 @@ and the cause is not obvious within 15 minutes.
 2. Restore it: `vercel rollback <deployment-url>` (or **Instant Rollback** on that deployment in
    the dashboard).
 3. Repeat smoke-test step 1 on the production URL.
+4. After a rollback Vercel stops pointing new pushes at the production URL. When the fix is
+   ready, push it and promote its deployment: `vercel promote <deployment-url>` (or **Promote**
+   in the dashboard).
 
 Data effect: older versions do not know the newer save fields (scope answers, research settings,
 scope sessions). Zod drops unknown fields, so after a rollback those fields disappear from a
