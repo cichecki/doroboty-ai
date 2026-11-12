@@ -8,4 +8,4 @@ Render imported text through React text nodes, validate imports with shared Zod 
 
 ## Product analytics
 
-The hosted production build sends anonymous pageviews and link/button clicks to PostHog (US cloud). Typed values are never captured. Elements showing text written by people (submitted answer, scope evidence, recruiter stage notes) carry `ph-no-capture`, so autocapture ignores them and session replay blocks them; replay also masks every input. Local, preview, test and participant builds have no key and send nothing.
+The hosted production build sends anonymous pageviews and link/button clicks to PostHog (US cloud) through the `/ingest` rewrite on the production domain. Typed values are never captured. Elements showing text written by people (submitted answer, scope evidence, recruiter stage notes) carry `ph-no-capture`, so autocapture ignores them and session replay blocks them; replay also masks every input. Local, preview, test and participant builds have no key and send nothing.

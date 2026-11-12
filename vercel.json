@@ -2,5 +2,16 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "buildCommand": "npm run build && mv dist/index.html dist/app.html && cp dist/design-system.html dist/index.html",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/ingest/static/:path*",
+      "destination": "https://us-assets.i.posthog.com/static/:path*"
+    },
+    {
+      "source": "/ingest/array/:path*",
+      "destination": "https://us-assets.i.posthog.com/array/:path*"
+    },
+    { "source": "/ingest/:path*", "destination": "https://us.i.posthog.com/:path*" }
+  ]
 }

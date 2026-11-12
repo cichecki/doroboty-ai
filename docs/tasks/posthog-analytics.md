@@ -13,11 +13,17 @@ Course quest: see a pageview and an autocaptured click from the production URL
 - `posthog-js` (pinned 1.441.2) initialised in `src/lib/analytics.ts`, called from `src/main.tsx`.
   It is imported dynamically, so it is a separate chunk loaded only when the key is present (main
   bundle stays ~336 kB instead of ~667 kB).
-- Starts only when `VITE_POSTHOG_KEY` is present at build time. The key and
-  `VITE_POSTHOG_HOST=https://us.i.posthog.com` are set on the Vercel **Production** environment
-  only, so local dev, previews, Playwright and participant packages keep making no external
+- Starts only when `VITE_POSTHOG_KEY` is present at build time. The key is set on the Vercel
+  **Production** environment only, so local dev, previews, Playwright and participant packages keep making no external
   requests (the e2e "no external requests" checks stay valid).
-- Pageviews on hash-route changes (`capture_pageview: "history_change"`), page leave, autocapture
+- First test (2026-11-12): only the first Pageview of each load reached PostHog (`…/app`, no
+  `#/route`, no Autocapture). Two causes: PostHog's `history_change` ignores hash-only changes,
+  and batched events (`/i/v0/e/`, `/s/`) were most likely cut by a browser blocker while the
+  instant first pageview (`/e/`) passed. A local capture with a regular-browser profile showed the
+  app sending `$autocapture` correctly. Fix: `PageviewTracker` in `app.tsx` records one pageview
+  per screen (`capture_pageview: false`), and events go through `/ingest` (vercel.json rewrites to
+  `us.i.posthog.com` / `us-assets.i.posthog.com`, `ui_host` us.posthog.com).
+- Page leave, autocapture
   limited to `a` and `button`, anonymous `identified_only` profiles, `localStorage` persistence
   (no cookies).
 - Privacy: PostHog never captures typed values; session replay masks all inputs; elements showing

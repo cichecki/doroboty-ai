@@ -3,8 +3,10 @@
 The course app is a static build hosted on the Vercel project `doroboty-design-system`.
 `vercel.json` serves the noir design-system page at `/` and the app at `/app`
 (`index.html` is renamed to `app.html` during the Vercel build). There are no servers or databases: every participant's data lives in their own browser. The only environment
-variables are `VITE_POSTHOG_KEY` and `VITE_POSTHOG_HOST` on the Vercel **Production** environment;
-they switch on PostHog analytics for the production URL only (project “DoRoboty”, US cloud).
+variable is `VITE_POSTHOG_KEY` on the Vercel **Production** environment; it switches on PostHog
+analytics for the production URL only (project “DoRoboty”, US cloud). Events go to `/ingest` on
+the production domain, which `vercel.json` rewrites to PostHog, so browser blockers do not drop
+them.
 
 Production URL: https://doroboty-design-system.vercel.app (app: `/app`).
 Preview URLs (`doroboty-design-system-<id>.vercel.app`) sit behind Vercel login, so never send

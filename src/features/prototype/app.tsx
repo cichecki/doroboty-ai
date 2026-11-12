@@ -1,4 +1,6 @@
-import { HashRouter, Routes, Route, Navigate } from "react-router";
+import { useEffect } from "react";
+import { HashRouter, Routes, Route, Navigate, useLocation } from "react-router";
+import { trackPageview } from "@/lib/analytics";
 import { PrototypeProvider } from "./store";
 import { Shell, NotFound } from "./shell";
 import HomePage from "./home";
@@ -149,10 +151,17 @@ function AppRoutes() {
     </Routes>
   );
 }
+/** One analytics pageview per screen; query changes (filters, search) do not count as new screens. */
+function PageviewTracker() {
+  const { pathname } = useLocation();
+  useEffect(() => trackPageview(), [pathname]);
+  return null;
+}
 export function App() {
   return (
     <PrototypeProvider>
       <HashRouter>
+        <PageviewTracker />
         <AppRoutes />
       </HashRouter>
     </PrototypeProvider>
