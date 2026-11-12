@@ -79,7 +79,7 @@ export function ApplicationRecord({
               content: (
                 <>
                   <h3>Przesłana aplikacja</h3>
-                  <p>{application.answer}</p>
+                  <p className="ph-no-capture">{application.answer}</p>
                   {application.scope && (
                     <ScopeBlock
                       meters={!candidate}
@@ -118,7 +118,9 @@ export function ApplicationRecord({
                 id: `${index}-${event.at}`,
                 title: stageLabels[event.stage],
                 dateTime: event.at,
-                content: event.note || undefined,
+                content: event.note ? (
+                  <span className="ph-no-capture">{event.note}</span>
+                ) : undefined,
               }))}
             />
           </section>

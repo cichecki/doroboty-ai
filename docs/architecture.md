@@ -22,4 +22,4 @@ The baseline historical CSV and JSON are separate from interactive state. Future
 
 ## Checks
 
-npm run check and ./scripts/verify run formatting, design-system reference integrity/example checks, lint, types, unit tests, build and Playwright against the static preview. Playwright checks external requests, complete workflows, error/recovery behavior, keyboard controls and mobile layout. No test starts system services. npm run dev only starts Vite.
+npm run check and ./scripts/verify run formatting, design-system reference integrity/example checks, lint, types, unit tests, build and Playwright against the static preview. Playwright checks external requests (builds without `VITE_POSTHOG_KEY` must make none; PostHog runs only on the Vercel Production build, see src/lib/analytics.ts), complete workflows, error/recovery behavior, keyboard controls and mobile layout. No test starts system services. npm run dev only starts Vite.

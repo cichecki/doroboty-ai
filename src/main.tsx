@@ -10,6 +10,8 @@ import "./sandbox/noir/recruit.css";
 import "./sandbox/noir/portraits.css";
 import "./sandbox/noir/polish.css";
 import "./app/noir-host.css";
+import { initAnalytics } from "./lib/analytics";
+void initAnalytics();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />

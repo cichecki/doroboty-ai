@@ -2,8 +2,9 @@
 
 The course app is a static build hosted on the Vercel project `doroboty-design-system`.
 `vercel.json` serves the noir design-system page at `/` and the app at `/app`
-(`index.html` is renamed to `app.html` during the Vercel build). There are no environment
-variables, servers or databases: every participant's data lives in their own browser.
+(`index.html` is renamed to `app.html` during the Vercel build). There are no servers or databases: every participant's data lives in their own browser. The only environment
+variables are `VITE_POSTHOG_KEY` and `VITE_POSTHOG_HOST` on the Vercel **Production** environment;
+they switch on PostHog analytics for the production URL only (project “DoRoboty”, US cloud).
 
 Production URL: https://doroboty-design-system.vercel.app (app: `/app`).
 Preview URLs (`doroboty-design-system-<id>.vercel.app`) sit behind Vercel login, so never send
@@ -76,6 +77,6 @@ with defaults; covered by `loads an old save without scope fields using defaults
    valid file or reset. The app never overwrites an unreadable save automatically.
 3. **Bug in a new version:** roll back first, fix on a branch, release again with sections 1–2.
 
-There is no automatic error reporting: the app deliberately makes no external requests.
-Participants report problems in the course channel with a screenshot and the steps they took,
+PostHog (Activity → Live, session replays) shows what participants clicked on production, but
+there is no automatic error alerting. Participants report problems in the course channel with a screenshot and the steps they took,
 without pasting personal data.

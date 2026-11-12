@@ -59,7 +59,9 @@ export function ScopeBlock({
               <dd>
                 {meters ? <ScopeMeter level={level} label={option.recruiter} /> : null}
                 <span className="scope-block__short">{option.recruiter}</span>
-                {evidence ? <q className="scope-block__evidence">{evidence}</q> : null}
+                {evidence ? (
+                  <q className="scope-block__evidence ph-no-capture">{evidence}</q>
+                ) : null}
               </dd>
             </div>
           ))}
