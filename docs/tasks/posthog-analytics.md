@@ -35,8 +35,9 @@ Course quest: see a pageview and an autocaptured click from the production URL
 ## Acceptance criteria
 
 - [x] `./scripts/verify` passes; unit tests cover "off without key" and the init options.
-- [ ] Production build contains the PostHog key; previews/local do not.
-- [ ] PostHog Activity → Live shows a Pageview and an Autocapture click from the production URL.
+- [x] Production build contains the PostHog key; previews/local do not.
+- [x] PostHog Activity shows a Pageview and an Autocapture click ("clicked link with text "Oferty"")
+      from the production URL (Kuba, 2026-11-12, after the /ingest fix in 36245f7).
 
 ## Register
 
