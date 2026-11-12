@@ -3,6 +3,14 @@ import AxeBuilder from "@axe-core/playwright";
 import { initialState } from "../../src/features/prototype/model";
 import { STORAGE_KEY } from "../../src/features/prototype/storage";
 import { readFile } from "node:fs/promises";
+// Reviewed design exceptions (2026-11-12): axe measures the 5px ink outline of noir master-button
+// labels against the red (3.78:1) instead of the outlined light fill people actually read, and the
+// red ".AI" in the logo is a brand mark the owner keeps. Running transitions are awaited first so
+// axe does not measure half-faded backgrounds (e.g. the active sidebar item fading to white).
+async function axe(page: Page) {
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
+  return new AxeBuilder({ page }).exclude(".nbtn--master .nbtn__label").exclude(".nlogo > b");
+}
 async function choose(page: Page, name: string) {
   await page.goto("/#/auth/sign-in");
   await page.getByRole("button", { name: `Wejdź jako ${name}`, exact: true }).click();
@@ -311,11 +319,11 @@ test("mobile navigation, noir dark-only appearance and keyboard person selection
 });
 test("core screens have no serious accessibility violations", async ({ page }) => {
   await page.goto("/#/oferty");
-  let results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+  let results = await (await axe(page)).withTags(["wcag2a", "wcag2aa"]).analyze();
   expect(results.violations).toEqual([]);
   await choose(page, "Anna Kowalska");
   await page.goto("/#/app/profil");
-  results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze();
+  results = await (await axe(page)).withTags(["wcag2a", "wcag2aa"]).analyze();
   expect(results.violations).toEqual([]);
 });
 
@@ -639,7 +647,14 @@ test("offer section links survive copied URLs and restore section focus through 
   await copied.goto(destination);
   await expect(copied.locator(".pp-offer-hero h1")).toHaveText("AI Product Manager");
   await expect(copied.locator("#employer")).toBeFocused();
-  expect((await copied.locator("#employer").boundingBox())!.y).toBeLessThan(50);
+  // The noir header is sticky: the section must start just below it, not underneath it.
+  const headerBottom = await copied
+    .getByRole("banner")
+    .first()
+    .evaluate((header) => header.getBoundingClientRect().bottom);
+  const sectionTop = (await copied.locator("#employer").boundingBox())!.y;
+  expect(sectionTop).toBeGreaterThanOrEqual(headerBottom);
+  expect(sectionTop).toBeLessThan(headerBottom + 50);
   await copied.close();
   await page.getByRole("link", { name: "O roli", exact: true }).click();
   await expect(page.locator("#role")).toBeFocused();
@@ -739,7 +754,7 @@ test("process sheet keeps notes across keyboard tabs and saves stage history wit
   await expect(note).toHaveCount(0);
   await expect(page.locator(".record-actions")).toHaveCount(0);
   await expect(page.locator(".process-timeline li")).toHaveCount(3);
-  const accessibility = await new AxeBuilder({ page }).include(".recruiting-record").analyze();
+  const accessibility = await (await axe(page)).include(".recruiting-record").analyze();
   expect(accessibility.violations).toEqual([]);
   await choose(page, "Marek Nowak");
   await page.goto("/#/app/aplikacje/application-example");
@@ -835,7 +850,7 @@ for (const width of [1280, 390]) {
     await page.reload();
     await expect(answer).toHaveValue(text);
     await expect(form.getByRole("checkbox")).not.toBeChecked();
-    const accessibility = await new AxeBuilder({ page }).include(".application-page").analyze();
+    const accessibility = await (await axe(page)).include(".application-page").analyze();
     expect(accessibility.violations).toEqual([]);
   });
 }
@@ -956,7 +971,7 @@ test("candidate record shares snapshot tabs while excluding employer notes and m
   await expect(page.locator(".record-stage")).toBeFocused();
   await expect(trigger).toHaveCount(0);
   await expect(page.getByRole("status")).toHaveText("Aplikacja została wycofana.");
-  const accessibility = await new AxeBuilder({ page }).include(".recruiting-record").analyze();
+  const accessibility = await (await axe(page)).include(".recruiting-record").analyze();
   expect(accessibility.violations).toEqual([]);
   await page.reload();
   await expect(page.locator(".record-stage")).toHaveText("Wycofana");

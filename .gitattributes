@@ -1,0 +1,10 @@
+# Keep LF in every checkout so formatting and hash checks pass on Windows too.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.webp binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ico binary

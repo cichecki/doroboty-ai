@@ -51,7 +51,15 @@ function csvCell(value: string | number): string {
 
 export function e2ResultsCsv(results: E2Result[]): string {
   const rows = results.map((r) =>
-    [r.at, r.view, r.multiplier ? 1 : 0, r.chosenIds.join("|"), r.hits, r.reason ?? "", r.durationMs]
+    [
+      r.at,
+      r.view,
+      r.multiplier ? 1 : 0,
+      r.chosenIds.join("|"),
+      r.hits,
+      r.reason ?? "",
+      r.durationMs,
+    ]
       .map(csvCell)
       .join(","),
   );

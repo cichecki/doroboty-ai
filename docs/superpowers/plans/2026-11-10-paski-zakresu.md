@@ -34,21 +34,27 @@
 ### Task 1: Bank pasków i czysta logika
 
 **Files:**
+
 - Create: `src/features/prototype/scope.ts`
 - Test: `src/features/prototype/scope.test.ts`
 
 **Interfaces:**
+
 - Produces:
+
   ```ts
   export type ScopeCategory = "build" | "apply" | "lead";
   export type ScopeAnswer = 1 | 2 | 3 | 4;
   export type FormVariant = "A" | "B";
-  export interface ScopeOption { candidate: string; recruiter: string }
+  export interface ScopeOption {
+    candidate: string;
+    recruiter: string;
+  }
   export interface ScopeBar {
-    id: "B1"|"B2"|"B3"|"A1"|"A2"|"A3"|"L1"|"L2"|"L3";
+    id: "B1" | "B2" | "B3" | "A1" | "A2" | "A3" | "L1" | "L2" | "L3";
     category: ScopeCategory;
-    title: string;      // np. "Własny komponent (kod, moduł, pipeline)"
-    question: string;   // np. "Jaka była Twoja rola w budowie rozwiązania?"
+    title: string; // np. "Własny komponent (kod, moduł, pipeline)"
+    question: string; // np. "Jaka była Twoja rola w budowie rozwiązania?"
     options: [ScopeOption, ScopeOption, ScopeOption, ScopeOption]; // odpowiedzi 1..4
     vaguePhrases: string[]; // małymi literami
   }
@@ -58,14 +64,18 @@
   export const SCOPE_PROMPT = "Jaka była Twoja rola w tym projekcie?";
   export function barsForCategory(category: ScopeCategory): ScopeBar[];
   export function barById(id: string): ScopeBar | undefined;
-  export function ownCount(answers: readonly number[]): number;   // liczba odpowiedzi >= 3
-  export function fullCount(answers: readonly number[]): number;  // liczba odpowiedzi === 4
+  export function ownCount(answers: readonly number[]): number; // liczba odpowiedzi >= 3
+  export function fullCount(answers: readonly number[]): number; // liczba odpowiedzi === 4
   export function multiplierScore(score: number, own: number): number; // Math.round(score * (1 + own / 3) / 2)
   export function evidenceRequired(variant: FormVariant, answer: number | undefined): boolean; // variant B i answer >= 3
   export function findVagueSentence(text: string, bar: ScopeBar): string | null;
   export function ownLabel(own: number, total?: number): string; // `Sam: ${own} z ${total ?? 3} obszarów`
-  export interface Rankable { answers: readonly number[]; submittedAt: string; score: number }
-  export function compareByScope(a: Rankable, b: Rankable): number;      // own desc, full desc, submittedAt asc
+  export interface Rankable {
+    answers: readonly number[];
+    submittedAt: string;
+    score: number;
+  }
+  export function compareByScope(a: Rankable, b: Rankable): number; // own desc, full desc, submittedAt asc
   export function compareByMultiplier(a: Rankable, b: Rankable): number; // multiplierScore desc, submittedAt asc
   ```
 
@@ -73,9 +83,21 @@
 
 ```ts
 import { describe, expect, it } from "vitest";
-import { SCOPE_BARS, barsForCategory, barById, ownCount, fullCount, multiplierScore,
-  evidenceRequired, findVagueSentence, ownLabel, compareByScope, compareByMultiplier,
-  EVIDENCE_PROMPTS, MIN_EVIDENCE_LENGTH } from "./scope";
+import {
+  SCOPE_BARS,
+  barsForCategory,
+  barById,
+  ownCount,
+  fullCount,
+  multiplierScore,
+  evidenceRequired,
+  findVagueSentence,
+  ownLabel,
+  compareByScope,
+  compareByMultiplier,
+  EVIDENCE_PROMPTS,
+  MIN_EVIDENCE_LENGTH,
+} from "./scope";
 
 describe("bank pasków", () => {
   it("ma po 3 paski na kategorię, każdy z 4 odpowiedziami", () => {
@@ -140,7 +162,11 @@ describe("wykrywanie ogólników", () => {
   });
 });
 describe("kolejność listy rekrutera", () => {
-  const app = (answers: number[], submittedAt: string, score = 50) => ({ answers, submittedAt, score });
+  const app = (answers: number[], submittedAt: string, score = 50) => ({
+    answers,
+    submittedAt,
+    score,
+  });
   it("najpierw liczba 3–4, potem liczba 4, potem najstarsze", () => {
     const list = [
       app([2, 2, 2], "2026-11-01T00:00:00.000Z"),
@@ -159,7 +185,9 @@ describe("kolejność listy rekrutera", () => {
       app([3, 3, 3], "2026-11-01T12:00:00.000Z", 60), // 60
     ].sort(compareByMultiplier);
     expect(list.map((x) => x.submittedAt)).toEqual([
-      "2026-11-01T12:00:00.000Z", "2026-11-02T00:00:00.000Z", "2026-11-01T00:00:00.000Z",
+      "2026-11-01T12:00:00.000Z",
+      "2026-11-02T00:00:00.000Z",
+      "2026-11-01T00:00:00.000Z",
     ]);
   });
 });
@@ -184,15 +212,29 @@ describe("kolejność listy rekrutera", () => {
 ### Task 2: Model stanu – paski w zgłoszeniu, ustawienia badania, sesje formularza
 
 **Files:**
+
 - Modify: `src/features/prototype/model.ts`
 - Test: `src/features/prototype/model.test.ts` (dopisz `describe("paski zakresu", ...)`), `src/features/prototype/storage.test.ts` (dopisz test starego zapisu)
 
 **Interfaces:**
+
 - Consumes: z Task 1 `barsForCategory`, `evidenceRequired`, `MIN_EVIDENCE_LENGTH`, `FormVariant`.
 - Produces (eksporty z `model.ts`):
+
   ```ts
-  export type ScopeAnswerInput = { barId: string; answer: 1|2|3|4; evidence?: string; probeQuote?: string; changedAfterProbe: boolean };
-  export type ApplicationScope = { project: string; variant: "A"|"B"; answers: ScopeAnswerInput[]; durationMs: number };
+  export type ScopeAnswerInput = {
+    barId: string;
+    answer: 1 | 2 | 3 | 4;
+    evidence?: string;
+    probeQuote?: string;
+    changedAfterProbe: boolean;
+  };
+  export type ApplicationScope = {
+    project: string;
+    variant: "A" | "B";
+    answers: ScopeAnswerInput[];
+    durationMs: number;
+  };
   // Application.scope?: ApplicationScope
   // State.experiment: { formVariant: "A"|"B"; multiplier: boolean }   (default { formVariant: "B", multiplier: false })
   // State.scopeSessions: { candidateId: string; jobId: string; variant: "A"|"B"; openedAt: string; submittedAt?: string }[]  (default [])
@@ -216,10 +258,19 @@ describe("kolejność listy rekrutera", () => {
 - [ ] **Step 2:** `npx vitest run src/features/prototype` – nowe testy FAIL.
 - [ ] **Step 3: Implement w `model.ts`.** Schematy:
   ```ts
-  const scopeAnswerSchema = z.object({ barId: id, answer: z.number().int().min(1).max(4),
-    evidence: text.max(600).optional(), probeQuote: text.max(600).optional(), changedAfterProbe: z.boolean() });
-  const scopeSchema = z.object({ project: shortText, variant: z.enum(["A","B"]),
-    answers: z.array(scopeAnswerSchema).length(3), durationMs: z.number().int().nonnegative() });
+  const scopeAnswerSchema = z.object({
+    barId: id,
+    answer: z.number().int().min(1).max(4),
+    evidence: text.max(600).optional(),
+    probeQuote: text.max(600).optional(),
+    changedAfterProbe: z.boolean(),
+  });
+  const scopeSchema = z.object({
+    project: shortText,
+    variant: z.enum(["A", "B"]),
+    answers: z.array(scopeAnswerSchema).length(3),
+    durationMs: z.number().int().nonnegative(),
+  });
   ```
   `applicationSchema` dostaje `scope: scopeSchema.optional()`. `stateSchema` dostaje `experiment: z.object({ formVariant: z.enum(["A","B"]), multiplier: z.boolean() }).default({ formVariant: "B", multiplier: false })` i `scopeSessions: z.array(z.object({ candidateId: id, jobId: id, variant: z.enum(["A","B"]), openedAt: z.iso.datetime(), submittedAt: z.iso.datetime().optional() })).max(5000).default([])`. W `submit`: jeśli `action.scope` jest, sprawdź, że `barId` są dokładnie `barsForCategory(job.category)` w tej kolejności, każdy `evidenceRequired(variant, answer)` ma `evidence.trim().length >= MIN_EVIDENCE_LENGTH`; w przeciwnym razie `fail("Uzupełnij odpowiedzi o swojej roli w projekcie.")`. Usuń `evidence`, gdy `!evidenceRequired(...)`. `variant` bierz z `s.experiment.formVariant`. Potem ustaw `submittedAt = now` w ostatniej sesji tej pary bez `submittedAt` (jeśli jest). Przykładowe zgłoszenie w `initialState()` dostaje `scope`: `project: "Automatyzacja obsługi zgłoszeń"`, `variant: "B"`, odpowiedzi `[3, 2, 1]` dla pasków kategorii `jobs[0]`, dowód przy pierwszej: `"Zaproponowałem kolejność wdrożenia i uzgodniłem ją ze sponsorem projektu."`, `changedAfterProbe: false`, `durationMs: 240000`.
 - [ ] **Step 4:** `npm test && npm run typecheck && npm run lint` – PASS.
@@ -230,22 +281,43 @@ describe("kolejność listy rekrutera", () => {
 ### Task 3: Formularz kandydata z paskami
 
 **Files:**
+
 - Create: `src/features/prototype/scope-questions.tsx`, `src/features/prototype/scope-block.tsx`
 - Modify: `src/features/prototype/workspace.tsx` (`ApplyPage`), `src/app/application.css`, `src/app/records.css`
 - Test: `tests/e2e/prototype.spec.ts` (helper + nowe testy), `tests/e2e/scope.spec.ts` (nowy)
 
 **Interfaces:**
+
 - Consumes: Task 1 (`barsForCategory`, `findVagueSentence`, `evidenceRequired`, `EVIDENCE_PROMPTS`, `MIN_EVIDENCE_LENGTH`, `SCOPE_PROMPT`), Task 2 (`scope_open`, `submit.scope`, `state.experiment.formVariant`).
 - Produces:
+
   ```ts
   // scope-questions.tsx
-  export type ScopeDraftItem = { answer?: 1|2|3|4; firstAnswer?: 1|2|3|4; evidence: string };
+  export type ScopeDraftItem = {
+    answer?: 1 | 2 | 3 | 4;
+    firstAnswer?: 1 | 2 | 3 | 4;
+    evidence: string;
+  };
   export type ScopeDraft = Record<string, ScopeDraftItem>; // klucz: barId
-  export function ScopeQuestions(props: { bars: ScopeBar[]; variant: FormVariant; answerText: string;
-    value: ScopeDraft; onChange: (next: ScopeDraft) => void; disabled?: boolean; attempted: boolean }): JSX.Element;
-  export function scopeProblems(bars: ScopeBar[], variant: FormVariant, value: ScopeDraft): string[]; // barId-y z brakami
+  export function ScopeQuestions(props: {
+    bars: ScopeBar[];
+    variant: FormVariant;
+    answerText: string;
+    value: ScopeDraft;
+    onChange: (next: ScopeDraft) => void;
+    disabled?: boolean;
+    attempted: boolean;
+  }): JSX.Element;
+  export function scopeProblems(
+    bars: ScopeBar[],
+    variant: FormVariant,
+    value: ScopeDraft,
+  ): string[]; // barId-y z brakami
   // scope-block.tsx (używane też w Task 4 i 7)
-  export function ScopeBlock(props: { answers: { barId: string; answer: number; evidence?: string }[]; heading?: string }): JSX.Element;
+  export function ScopeBlock(props: {
+    answers: { barId: string; answer: number; evidence?: string }[];
+    heading?: string;
+  }): JSX.Element;
   // heading domyślnie "Rola w projekcie"; wiersz = tytuł paska, krótka wersja dla rekrutera, dowód w cudzysłowie „…”.
   // Puste answers → <p>Brak odpowiedzi o roli w projekcie.</p>
   export function OwnTag(props: { answers: readonly number[] }): JSX.Element; // tekst ownLabel(ownCount(answers))
@@ -269,10 +341,12 @@ describe("kolejność listy rekrutera", () => {
 ### Task 4: Widoki rekrutera – blok, znacznik, kolejność, przełącznik mnożnika
 
 **Files:**
+
 - Modify: `src/features/prototype/workspace.tsx` (`ApplicationsPage`), `src/features/prototype/application-record.tsx`, `src/app/records.css`
 - Test: `tests/e2e/scope.spec.ts` (dopisz)
 
 **Interfaces:**
+
 - Consumes: Task 1 (`compareByScope`, `compareByMultiplier`, `multiplierScore`, `ownCount`), Task 3 (`ScopeBlock`, `OwnTag`), Task 2 (`application.scope`, `state.experiment.multiplier`).
 - Produces: `ApplicationRecord` przyjmuje w `application` także pole `scope` (opcjonalne) i renderuje `ScopeBlock` pod przesłaną odpowiedzią dla obu ról.
 
@@ -292,10 +366,12 @@ describe("kolejność listy rekrutera", () => {
 ### Task 5: Podgląd pasków przy publikacji ogłoszenia
 
 **Files:**
+
 - Modify: `src/features/prototype/employer.tsx` (`EmployerJobEditor`)
 - Test: `tests/e2e/scope.spec.ts` (dopisz)
 
 **Interfaces:**
+
 - Consumes: Task 1 `barsForCategory`.
 
 - [ ] **Step 1: Write failing e2e:** jako pracodawca w edytorze oferty widać panel z tekstem `"Kandydaci odpowiedzą, jak duża była ich rola w tych obszarach"` i 3 tytułami pasków kategorii; po zmianie kategorii na „Lead” (lub odpowiednią etykietę z `categoryLabels`) widać tytuły L1–L3. Brak przycisku podmiany paska.
@@ -309,10 +385,12 @@ describe("kolejność listy rekrutera", () => {
 ### Task 6: Ustawienia badania i eksport danych E3
 
 **Files:**
+
 - Create: `src/features/prototype/scope-export.ts`, `src/features/prototype/scope-export.test.ts`
 - Modify: `src/features/prototype/settings.tsx`
 
 **Interfaces:**
+
 - Consumes: Task 1 (`multiplierScore`, `ownCount`), Task 2 (`State`, `experiment` action), `downloadText` z `settings.tsx`.
 - Produces: `export function researchCsv(state: State): string;`
 
@@ -332,14 +410,17 @@ describe("kolejność listy rekrutera", () => {
 ### Task 7: Widok badania E2
 
 **Files:**
+
 - Create: `src/features/prototype/e2-study.tsx`, `src/features/prototype/e2-study.test.ts`
 - Use (już w repo): `src/features/prototype/data/e2-applications.json` – `{ jobTitle, category: "apply", note, applications: [{ id, candidateName, submittedAt, score, answer, answers: [n,n,n], evidence: (string|null)[], outcome: "continued"|"rejected", sourceApplicationId }] }`, 10 zgłoszeń.
 - Modify: `src/features/prototype/app.tsx` (trasa `badanie/e2` bez `RequireRole`), `src/app/records.css`
 - Test: `tests/e2e/scope.spec.ts` (dopisz)
 
 **Interfaces:**
+
 - Consumes: Task 1 (`compareByScope`, `compareByMultiplier`, `multiplierScore`, `ownCount`, `barsForCategory`), Task 3 (`ScopeBlock`, `OwnTag`), `MatchScore`, `downloadText`, `state.experiment.multiplier`.
 - Produces:
+
   ```ts
   export const E2_RESULTS_KEY = "doroboty.e2.results";
   export type E2View = "obecny" | "paski";
@@ -360,6 +441,7 @@ describe("kolejność listy rekrutera", () => {
 ### Task 8: Dokumentacja i pełna weryfikacja
 
 **Files:**
+
 - Modify: `FEATURES.md`, `docs/tasks/scope-bars-spec.md` (nagłówek statusu), Create: `docs/tasks/scope-bars.md`
 
 - [ ] **Step 1:** W `FEATURES.md` dopisz wpisy o nowym zachowaniu w stylu istniejących wpisów (nowe stabilne ID w odpowiednich sekcjach): paski w formularzu kandydata, blok i kolejność u rekrutera, podgląd pasków przy publikacji, ustawienia badania i eksport CSV, widok `#/badanie/e2`.
