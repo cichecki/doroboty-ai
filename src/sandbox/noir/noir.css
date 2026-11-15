@@ -1242,14 +1242,14 @@ img {
   z-index: 3;
   left: 3%;
   bottom: -8px;
-  width: 150px;
-  translate: -160% 0;
+  width: 190px;
+  translate: 0 110%;
 }
 .moment__bubble {
   position: absolute;
   z-index: 4;
-  left: 140px;
-  bottom: 205px;
+  left: 175px;
+  bottom: 255px;
   max-width: 16ch;
   opacity: 0;
 }
@@ -1325,10 +1325,10 @@ img {
   animation: sfx-in 640ms 1050ms linear both;
 }
 .moment.is-open .moment__advisor {
-  animation: adv-in 700ms 1450ms var(--ease-spring) both;
+  animation: adv-in 620ms 1250ms var(--ease-spring) both;
 }
 .moment.is-open .moment__bubble {
-  animation: bub-in 520ms 1900ms linear both;
+  animation: bub-in 520ms 1950ms linear both;
 }
 
 @keyframes tear-l {
@@ -1794,12 +1794,12 @@ img {
     width: 100px;
   }
   .moment__stage {
-    min-height: 580px;
+    min-height: 660px;
   }
   .moment__panel,
   .moment__burst {
     left: 50%;
-    top: 34%;
+    top: 30%;
   }
   .moment__panel {
     width: 88%;
@@ -1817,11 +1817,11 @@ img {
     --sfx-size: 50px;
   }
   .moment__advisor {
-    width: 104px;
+    width: 128px;
   }
   .moment__bubble {
-    left: 104px;
-    bottom: 140px;
+    left: 118px;
+    bottom: 145px;
     max-width: 17ch;
   }
   .sbub--burst {

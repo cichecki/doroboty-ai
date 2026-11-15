@@ -467,8 +467,16 @@ export function SpeechBubble({
       return;
     }
     const compute = () => {
-      const b = el.getBoundingClientRect(),
-        tr = t.getBoundingClientRect();
+      // Gdy dymek i cel mają wspólnego rodzica, liczymy z układu bez transformacji
+      // (offsetLeft/Top): ogonek celuje w docelowe miejsce głowy już w pierwszej
+      // klatce, nawet jeśli cel albo dymek są jeszcze w trakcie animacji wjazdu.
+      const shared = t.offsetParent && t.offsetParent === el.offsetParent;
+      const b = shared
+        ? { left: el.offsetLeft, top: el.offsetTop, width: el.offsetWidth, height: el.offsetHeight }
+        : el.getBoundingClientRect();
+      const tr = shared
+        ? { left: t.offsetLeft, top: t.offsetTop, width: t.offsetWidth, height: t.offsetHeight }
+        : t.getBoundingClientRect();
       // cel w układzie dymka
       const tx = tr.left + tr.width * aim[0] - b.left;
       const ty = tr.top + tr.height * aim[1] - b.top;
