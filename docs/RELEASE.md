@@ -40,7 +40,7 @@ dashboard (project → Settings → Environments → Production → Branch Track
 
 Do it in a private window, so you start with an empty local save.
 
-1. `/` shows the noir design-system page; `/app` loads the app without a Vercel login screen.
+1. `/` shows the noir design-system page; `/app` loads the app without a Vercel login screen; `/app/` redirects to `/app` (the build uses relative asset paths, so a trailing slash would load a blank page).
 2. Choose Karolina (employer) and publish a job.
 3. Switch to Anna (candidate), open that job, fill the application including the scope
    questions and submit it.
