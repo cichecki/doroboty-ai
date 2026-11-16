@@ -63,12 +63,15 @@ export default function HomePage() {
               variant="burst"
               className="home-hero__bubble"
               target={advisor}
-              gap={40}
+              gap={64}
               tailWidth={14}
             >
               AI w roli, nie w nagłówku!
             </SpeechBubble>
-            <img ref={advisor} className="home-hero__advisor" src={advisorImg} alt="" />
+            <span className="home-hero__figure">
+              <img ref={advisor} className="home-hero__advisor" src={advisorImg} alt="" />
+              <span className="home-hero__glow" />
+            </span>
           </div>
         </div>
       </section>
